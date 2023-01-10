@@ -14,7 +14,6 @@ function Header() {
                         <Nav.Link as={Link} to="/EGOLD">EGOLD</Nav.Link>
                         <Nav.Link as={Link} to="/EGOLDConfig">EGOLDConfig</Nav.Link>
                         <Nav.Link as={Link} to="/ContractConfig">ContractConfig</Nav.Link>
-                        <Nav.Link as={Link} to="/Transaction">Transaction</Nav.Link>
                     </Nav>
                 </Container>
             </Navbar>

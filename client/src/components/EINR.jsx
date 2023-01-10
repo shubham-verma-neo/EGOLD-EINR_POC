@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import Table from 'react-bootstrap/Table';
+import Tx from './Tx';
 
-export default function EINR() {
+export default function EINR({ backdrop, setBackdrop, tx, setTx, receipt, setReceipt }) {
 
     const [accounts, setAccounts] = useState(null);
     const [contract, setContract] = useState(null);
@@ -13,7 +14,7 @@ export default function EINR() {
 
     useEffect(() => {
         setTimeout(async () => {
-            const artifact = require(`../contracts/EINR.json`);
+            const artifact = require(`../contracts/EINRContract.json`);
             const _web3 = new Web3(Web3.givenProvider);
             const _accounts = await _web3.eth.requestAccounts();
             const networkID = await _web3.eth.net.getId();
@@ -31,7 +32,7 @@ export default function EINR() {
             await contract.methods.balanceOf(_accounts[0]).call({ from: _accounts[0] })
                 .then(e => {
                     //console.log(e);
-                    setMyBalance(e);
+                setMyBalance(Web3.utils.fromWei(e, "ether"));
                 })
                 .catch(err => console.log(err));
         }, 100)
@@ -42,7 +43,8 @@ export default function EINR() {
         await contract.methods.balanceOf(accounts[0]).call({ from: accounts[0] })
             .then(e => {
                 //console.log(e);
-                setMyBalance(e);
+                setMyBalance(Web3.utils.fromWei(e, "ether"));
+                // setMyBalance(e);
             })
             .catch(err => console.log(err));
     }
@@ -52,20 +54,27 @@ export default function EINR() {
     }
 
     const mintEINR = async () => {
-        await contract.methods.mint(mint)
+        setBackdrop(true);
+        await contract.methods.mint(Web3.utils.toWei(mint, "ether"))
             .send({
                 from: accounts[0]
             })
             .then(e => {
                 //console.log(e);
+                setReceipt(e)
+                setTx(true);
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                setBackdrop(false);
+                console.log(err)
+            });
         getDataHandler();
         setMint("");
     }
 
     return (
         <div>
+            {backdrop && <Tx backdrop={ backdrop} setBackdrop={setBackdrop} tx={tx} setTx={setTx} receipt={receipt} setReceipt={setReceipt} />}
             <h1>Data</h1>
             <Table striped bordered hover>
                 <tbody>
@@ -76,13 +85,13 @@ export default function EINR() {
                     </tr>
                 </tbody>
             </Table>
-            <div  style={{
-                    padding: "1rem",
-                    display: "flex",
-                    gap: "7px"
-                }}>
+            <div style={{
+                padding: "1rem",
+                display: "flex",
+                gap: "7px"
+            }}>
                 <label><h5>EINR</h5></label>
-                <input onChange={setMintHandler} value={mint} placeholder='Enter EINR Amount'/>
+                <input onChange={setMintHandler} value={mint} placeholder='Enter EINR Amount' />
                 <button onClick={mintEINR}>Mint</button>
 
             </div>

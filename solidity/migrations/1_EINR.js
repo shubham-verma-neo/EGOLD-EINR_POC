@@ -1,5 +1,5 @@
-const EINR = artifacts.require("EINR");
+const EINRContract = artifacts.require("EINRContract");
 
 module.exports = function (deployer) {
-  deployer.deploy(EINR);
+  deployer.deploy(EINRContract);
 };

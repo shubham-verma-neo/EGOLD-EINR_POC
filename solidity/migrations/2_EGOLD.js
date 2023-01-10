@@ -1,5 +1,5 @@
-const EGOLD = artifacts.require("EGOLD");
+const EGOLDContract = artifacts.require("EGOLDContract");
 
 module.exports = function (deployer) {
-  deployer.deploy(EGOLD);
+  deployer.deploy(EGOLDContract);
 };

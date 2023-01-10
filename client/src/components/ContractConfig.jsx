@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import Table from 'react-bootstrap/Table';
+import Tx from './Tx';
+import { Link } from 'react-router-dom';
 
-export default function ContractConfig() {
+export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, receipt, setReceipt }) {
 
     const [accounts, setAccounts] = useState(null);
 
@@ -28,7 +30,7 @@ export default function ContractConfig() {
             const networkID = await _web3.eth.net.getId();
             setAccounts(_accounts);
 
-            const artifactEINR = require(`../contracts/EINR.json`);
+            const artifactEINR = require(`../contracts/EINRContract.json`);
             let { abi } = artifactEINR;
             let addressEINR, contractEINR;
             try {
@@ -48,7 +50,7 @@ export default function ContractConfig() {
                 .catch(err => console.log(err));
 
 
-            const artifactEGOLD = require(`../contracts/EGOLD.json`);
+            const artifactEGOLD = require(`../contracts/EGOLDContract.json`);
             ({ abi } = artifactEGOLD);
             let addressEGOLD, contractEGOLD;
 
@@ -92,14 +94,20 @@ export default function ContractConfig() {
     }
 
     const setEGOLD = async () => {
+        setBackdrop(true);
         await contractEINR.methods.setEGOLD(addEGOLD)
             .send({
                 from: accounts[0]
             })
             .then(e => {
                 //console.log(e);
+                setReceipt(e)
+                setTx(true);
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                setBackdrop(false);
+                console.log(err)
+            });
         getDataHandler();
         setAddEGOLD("");
     }
@@ -110,20 +118,27 @@ export default function ContractConfig() {
     }
 
     const setEINR = async () => {
+        setBackdrop(true);
         await contractEGOLD.methods.setEINR(addEINR)
             .send({
                 from: accounts[0]
             })
             .then(e => {
                 //console.log(e);
+                setReceipt(e)
+                setTx(true);
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                setBackdrop(false);
+                console.log(err)
+            });
         getDataHandler();
         setAddEINR("");
     }
 
     return (
         <div>
+            {backdrop && <Tx backdrop={ backdrop} setBackdrop={setBackdrop} tx={tx} setTx={setTx} receipt={receipt} setReceipt={setReceipt} />}
             <div>
                 <h1>EINR Config</h1>
                 <Table striped bordered hover>
@@ -138,7 +153,7 @@ export default function ContractConfig() {
                         <tr>
                             <td>1</td>
                             <td>EINR</td>
-                            <td>{EINRAdd && EINRAdd}</td>
+                            <td>{EINRAdd && <Link onClick={() => window.open(`https://mumbai.polygonscan.com/token/${EINRAdd}`)}>{EINRAdd}</Link>}</td>
                         </tr>
                     </tbody>
                     <tbody>
@@ -150,14 +165,14 @@ export default function ContractConfig() {
                     </tbody>
                 </Table>
 
-                <div  style={{
+                <div style={{
                     padding: "1rem",
                     display: "flex",
                     gap: "7px"
                 }}>
                     <label><h5>Set EGOLD Add</h5></label>
                     <input onChange={setEGOLDHandler} value={addEGOLD} placeholder='EGOLD Address' />
-                    <button onClick={setEGOLD}>Set</button> 
+                    <button onClick={setEGOLD}>Set</button>
 
                 </div>
             </div>
@@ -175,7 +190,7 @@ export default function ContractConfig() {
                         <tr>
                             <td>1</td>
                             <td>EGOLD</td>
-                            <td>{EGOLDAdd && EGOLDAdd}</td>
+                            <td>{EGOLDAdd && <Link onClick={() => window.open(`https://mumbai.polygonscan.com/token/${EGOLDAdd}`)}>{EGOLDAdd}</Link>}</td>
                         </tr>
                     </tbody>
                     <tbody>
@@ -187,7 +202,7 @@ export default function ContractConfig() {
                     </tbody>
                 </Table>
 
-                <div  style={{
+                <div style={{
                     padding: "1rem",
                     display: "flex",
                     gap: "7px"

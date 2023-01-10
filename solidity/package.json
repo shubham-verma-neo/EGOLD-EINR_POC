@@ -4,12 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "compile": "truffle compile",
+    "deploy-goerli": "truffle deploy --network goerli",
+    "deploy-matic": "truffle deploy --network matic",
     "dev": "truffle migrate --network development"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.8.0"
+    "@openzeppelin/contracts": "^4.8.0",
+    "@truffle/hdwallet-provider": "^2.1.4",
+    "dotenv": "^16.0.3"
   }
 }

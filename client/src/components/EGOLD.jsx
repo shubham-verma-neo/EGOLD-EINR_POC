@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import Table from 'react-bootstrap/Table';
+import Tx from './Tx';
 
-export default function EGOLD() {
+export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setReceipt }) {
 
     const [accounts, setAccounts] = useState(null);
     const [contract, setContract] = useState(null);
@@ -16,7 +17,7 @@ export default function EGOLD() {
 
     useEffect(() => {
         setTimeout(async () => {
-            const artifact = require(`../contracts/EGOLD.json`);
+            const artifact = require(`../contracts/EGOLDContract.json`);
             const _web3 = new Web3(Web3.givenProvider);
             const _accounts = await _web3.eth.requestAccounts();
             const networkID = await _web3.eth.net.getId();
@@ -34,28 +35,28 @@ export default function EGOLD() {
             await contract.methods.totalSupply().call({ from: _accounts[0] })
                 .then(e => {
                     //console.log(e);
-                    setTotalSupply(e);
+                    setTotalSupply(Web3.utils.fromWei(e, "ether"));
                 })
                 .catch(err => console.log(err));
 
             await contract.methods.availableSupply().call({ from: _accounts[0] })
                 .then(e => {
                     //console.log(e);
-                    setAvailableSupply(e);
+                    setAvailableSupply(Web3.utils.fromWei(e, "ether"));
                 })
                 .catch(err => console.log(err));
 
             await contract.methods.EGoldPrice().call({ from: _accounts[0] })
                 .then(e => {
                     //console.log(e);
-                    setPerEGOLD(e);
+                    setPerEGOLD(Web3.utils.fromWei(e, "ether"));
                 })
                 .catch(err => console.log(err));
 
             await contract.methods.balanceOf(_accounts[0]).call({ from: _accounts[0] })
                 .then(e => {
                     //console.log(e);
-                    setMyBalance(e);
+                    setMyBalance(Web3.utils.fromWei(e, "ether"));
                 })
                 .catch(err => console.log(err));
 
@@ -67,21 +68,21 @@ export default function EGOLD() {
         await contract.methods.availableSupply().call({ from: accounts[0] })
             .then(e => {
                 //console.log(e);
-                setAvailableSupply(e);
+                setAvailableSupply(Web3.utils.fromWei(e, "ether"));
             })
             .catch(err => console.log(err));
 
-            await contract.methods.EGoldPrice().call({ from: accounts[0] })
+        await contract.methods.EGoldPrice().call({ from: accounts[0] })
             .then(e => {
                 //console.log(e);
-                setPerEGOLD(e);
+                setPerEGOLD(Web3.utils.fromWei(e, "ether"));
             })
-                .catch(err => console.log(err));
+            .catch(err => console.log(err));
 
         await contract.methods.balanceOf(accounts[0]).call({ from: accounts[0] })
             .then(e => {
                 //console.log(e);
-                setMyBalance(e);
+                setMyBalance(Web3.utils.fromWei(e, "ether"));
             })
             .catch(err => console.log(err));
     }
@@ -91,20 +92,27 @@ export default function EGOLD() {
     }
 
     const buyEGOLD = async () => {
-        await contract.methods.buyGold(buy)
+        setBackdrop(true);
+        await contract.methods.buyGold(Web3.utils.toWei(buy, "ether"))
             .send({
                 from: accounts[0]
             })
             .then(e => {
                 //console.log(e);
+                setReceipt(e)
+                setTx(true);
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                setBackdrop(false);
+                console.log(err)
+            });
         getDataHandler();
         setBuy("");
     }
 
     return (
         <div>
+            {backdrop && <Tx backdrop={backdrop} setBackdrop={setBackdrop} tx={tx} setTx={setTx} receipt={receipt} setReceipt={setReceipt} />}
             <h1>Data</h1>
             <Table striped bordered hover>
                 <tbody>
@@ -141,7 +149,7 @@ export default function EGOLD() {
                 display: "flex",
                 gap: "7px"
             }}>
-            <label><h5>{`Total Cost : ${perEGOLD * buy} EINR`} </h5></label>
+                <label><h5>{`Total Cost : ${perEGOLD * buy} EINR`} </h5></label>
             </div>
             <div style={{
                 padding: "1rem",
