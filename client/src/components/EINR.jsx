@@ -2,45 +2,33 @@ import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import Table from 'react-bootstrap/Table';
 import Tx from './Tx';
+import useMeta from '../MetamaskLogin/useMeta';
 
 export default function EINR({ backdrop, setBackdrop, tx, setTx, receipt, setReceipt }) {
+    const { state: { EINRContract, accounts } } = useMeta();
 
-    const [accounts, setAccounts] = useState(null);
-    const [contract, setContract] = useState(null);
 
     const [myBalance, setMyBalance] = useState("");
 
     const [mint, setMint] = useState("");
 
     useEffect(() => {
-        setTimeout(async () => {
-            const artifact = require(`../contracts/EINRContract.json`);
-            const _web3 = new Web3(Web3.givenProvider);
-            const _accounts = await _web3.eth.requestAccounts();
-            const networkID = await _web3.eth.net.getId();
-            const { abi } = artifact;
-            let address, contract;
-            try {
-                address = artifact.networks[networkID].address;
-                contract = new _web3.eth.Contract(abi, address);
-            } catch (err) {
-                console.error(err);
-            }
-            setAccounts(_accounts);
-            setContract(contract);
-
-            await contract.methods.balanceOf(_accounts[0]).call({ from: _accounts[0] })
-                .then(e => {
-                    //console.log(e);
-                setMyBalance(Web3.utils.fromWei(e, "ether"));
-                })
-                .catch(err => console.log(err));
-        }, 100)
-
-    }, [])
+        if (accounts) {
+            setTimeout(async () => {
+                await EINRContract.methods.balanceOf(accounts[0]).call({ from: accounts[0] })
+                    .then(e => {
+                        //console.log(e);
+                        setMyBalance(Web3.utils.fromWei(e, "ether"));
+                    })
+                    .catch(err => console.log(err));
+            }, 100)
+        } else {
+            setMyBalance(null);
+        }
+    }, [accounts])
 
     const getDataHandler = async () => {
-        await contract.methods.balanceOf(accounts[0]).call({ from: accounts[0] })
+        await EINRContract.methods.balanceOf(accounts[0]).call({ from: accounts[0] })
             .then(e => {
                 //console.log(e);
                 setMyBalance(Web3.utils.fromWei(e, "ether"));
@@ -55,7 +43,7 @@ export default function EINR({ backdrop, setBackdrop, tx, setTx, receipt, setRec
 
     const mintEINR = async () => {
         setBackdrop(true);
-        await contract.methods.mint(Web3.utils.toWei(mint, "ether"))
+        await EINRContract.methods.mint(Web3.utils.toWei(mint, "ether"))
             .send({
                 from: accounts[0]
             })
@@ -74,14 +62,14 @@ export default function EINR({ backdrop, setBackdrop, tx, setTx, receipt, setRec
 
     return (
         <div>
-            {backdrop && <Tx backdrop={ backdrop} setBackdrop={setBackdrop} tx={tx} setTx={setTx} receipt={receipt} setReceipt={setReceipt} />}
+            {backdrop && <Tx backdrop={backdrop} setBackdrop={setBackdrop} tx={tx} setTx={setTx} receipt={receipt} setReceipt={setReceipt} />}
             <h1>Data</h1>
-            <Table striped bordered hover>
+            <Table striped bordered hover >
                 <tbody>
                     <tr>
                         <th>1</th>
                         <th>My Balance</th>
-                        <td>{myBalance} EINR</td>
+                        <td>{myBalance ? `${myBalance} EINR` : '--'}</td>
                     </tr>
                 </tbody>
             </Table>

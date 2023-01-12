@@ -8,14 +8,6 @@ import classes from './Tx.module.css';
 export default function Tx({backdrop, setBackdrop, tx, setTx, receipt, setReceipt}) {
     const receiptType = () => {
         return Object.keys(receipt.events)[Object.keys(receipt.events).length - 1];
-
-        // console.log(Object.keys(receipt.events)[Object.keys(receipt.events).length - 1]);
-        // for (const i of Object.keys(receipt.events)) {
-        //     if (i.length > 2) {
-        //         // return i;
-        //         console.log(i);
-        //     }
-        // }
     }
     const onClose = () => {
         setReceipt({});
