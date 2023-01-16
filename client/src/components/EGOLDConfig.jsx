@@ -9,7 +9,7 @@ export default function EGOLDConfig({ backdrop, setBackdrop, tx, setTx, receipt,
 
     const [perEGOLD, setPerEGOLD] = useState("");
 
-    const [EGOLDprice, setEGOLDprice] = useState("");
+    const [EGOLDprice, setEGOLDprice] = useState("0");
 
     useEffect(() => {
         if (accounts) {
@@ -41,6 +41,14 @@ export default function EGOLDConfig({ backdrop, setBackdrop, tx, setTx, receipt,
     }
 
     const setEGOLD = async () => {
+        if (!accounts) {
+            alert("Please Connect Wallet.");
+            return;
+        }
+        if (EGOLDprice === "0") {
+            alert("EGOLD price should be greater than 0");
+            return;
+        }
         setBackdrop(true);
         await EGOLDContract.methods.setGoldPrice(Web3.utils.toWei(EGOLDprice, "ether"))
             .send({
@@ -56,7 +64,7 @@ export default function EGOLDConfig({ backdrop, setBackdrop, tx, setTx, receipt,
                 console.log(err)
             });
         getDataHandler();
-        setEGOLDprice("");
+        setEGOLDprice("0");
     }
 
 
@@ -79,7 +87,7 @@ export default function EGOLDConfig({ backdrop, setBackdrop, tx, setTx, receipt,
                 gap: "7px"
             }}>
                 <label><h5>Set EGOLD Price</h5></label><br />
-                <input onChange={setEGOLDPriceHandler} value={EGOLDprice} placeholder='Price in EINR' />
+                <input onChange={setEGOLDPriceHandler} value={EGOLDprice} type='number' min={1} placeholder='Price in EINR' />
                 <button onClick={setEGOLD}>Set</button> <br />
             </div>
         </div>

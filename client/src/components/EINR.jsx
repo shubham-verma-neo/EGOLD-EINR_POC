@@ -10,7 +10,7 @@ export default function EINR({ backdrop, setBackdrop, tx, setTx, receipt, setRec
 
     const [myBalance, setMyBalance] = useState("");
 
-    const [mint, setMint] = useState("");
+    const [mint, setMint] = useState("0");
 
     useEffect(() => {
         if (accounts) {
@@ -42,6 +42,14 @@ export default function EINR({ backdrop, setBackdrop, tx, setTx, receipt, setRec
     }
 
     const mintEINR = async () => {
+        if (!accounts) {
+            alert("Please Connect Wallet.");
+            return;
+        }
+        if (mint === "0") {
+            alert("Mint amount should be greater than 0");
+            return;
+        }
         setBackdrop(true);
         await EINRContract.methods.mint(Web3.utils.toWei(mint, "ether"))
             .send({
@@ -57,7 +65,7 @@ export default function EINR({ backdrop, setBackdrop, tx, setTx, receipt, setRec
                 console.log(err)
             });
         getDataHandler();
-        setMint("");
+        setMint("0");
     }
 
     return (
@@ -79,7 +87,7 @@ export default function EINR({ backdrop, setBackdrop, tx, setTx, receipt, setRec
                 gap: "7px"
             }}>
                 <label><h5>EINR</h5></label>
-                <input onChange={setMintHandler} value={mint} placeholder='Enter EINR Amount' />
+                <input onChange={setMintHandler} value={mint} type='number' min={1} placeholder='Enter EINR Amount' />
                 <button onClick={mintEINR}>Mint</button>
 
             </div>

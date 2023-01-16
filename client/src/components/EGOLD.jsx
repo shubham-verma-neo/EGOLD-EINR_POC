@@ -1,20 +1,22 @@
 import Web3 from 'web3';
 import Tx from './Tx';
 import useMeta from '../MetamaskLogin/useMeta';
+import StripePayment from './StripePayment';
 
 import React, { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 
-
 export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setReceipt }) {
     const { state: { EGOLDContract, accounts } } = useMeta();
-
     const [totalSupply, setTotalSupply] = useState("");
     const [availableSupply, setAvailableSupply] = useState("");
     const [perEGOLD, setPerEGOLD] = useState("");
     const [myBalance, setMyBalance] = useState("");
 
-    const [buy, setBuy] = useState("");
+    const [buy, setBuy] = useState("0");
+    const [_Tx, set_Tx] = useState(false);
+    const [success, setSuccess] = useState(false);
+
 
     useEffect(() => {
         if (accounts) {
@@ -52,9 +54,7 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
             setAvailableSupply(null);
             setPerEGOLD(null);
             setMyBalance(null);
-
         }
-
     }, [accounts])
 
     const getDataHandler = async () => {
@@ -84,24 +84,43 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
         setBuy(e.target.value);
     }
 
+    useEffect(() => {
+        if (success) {
+            setBackdrop(true);
+            setTimeout(async () => {
+                await EGOLDContract.methods.buyGold(Web3.utils.toWei(buy, "ether"))
+                    .send({
+                        from: accounts[0]
+                    })
+                    .then(e => {
+                        //console.log(e);
+                        setReceipt(e)
+                        setTx(true);
+                    })
+                    .catch(async (err) => {
+                        setBackdrop(false);
+                        console.log(err)
+                    });
+                getDataHandler();
+                setBuy("0");
+                setSuccess(false);
+            })
+
+        }
+    }, [success])
+
     const buyEGOLD = async () => {
-        setBackdrop(true);
-        await EGOLDContract.methods.buyGold(Web3.utils.toWei(buy, "ether"))
-            .send({
-                from: accounts[0]
-            })
-            .then(e => {
-                //console.log(e);
-                setReceipt(e)
-                setTx(true);
-            })
-            .catch(err => {
-                setBackdrop(false);
-                console.log(err)
-            });
-        getDataHandler();
-        setBuy("");
+        if (!accounts) {
+            alert("Please Connect Wallet.");
+            return;
+        }
+        if (buy === "0") {
+            alert("Enter valid quantity of EGOLD.");
+            return;
+        }
+        set_Tx(true);
     }
+
 
     return (
         <div>
@@ -150,9 +169,16 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
                 gap: "7px"
             }}>
                 <label><h5>Buy EGOLD </h5></label>
-                <input onChange={setBuyHandler} value={buy} placeholder='EGOLD Qty.' />
+                <input onChange={setBuyHandler} value={buy} type='number' min={1} placeholder='EGOLD Qty.' />
                 <button onClick={buyEGOLD}>Buy</button>
             </div>
+            {_Tx && <StripePayment
+                success={success}
+                setSuccess={setSuccess}
+                set_Tx={set_Tx}
+                totalPrice={perEGOLD * buy}
+                account={accounts[0]}
+            />}
         </div>
     )
 }

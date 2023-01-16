@@ -60,6 +60,10 @@ export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, recei
     }
 
     const setEGOLD = async () => {
+        if (!accounts) {
+            alert("Please Connect Wallet.");
+            return;
+        }
         setBackdrop(true);
         await EINRContract.methods.setEGOLD(addEGOLD)
             .send({
@@ -84,6 +88,10 @@ export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, recei
     }
 
     const setEINR = async () => {
+        if (!accounts) {
+            alert("Please Connect Wallet.");
+            return;
+        }
         setBackdrop(true);
         await EGOLDContract.methods.setEINR(addEINR)
             .send({
