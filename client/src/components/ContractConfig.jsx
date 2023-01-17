@@ -16,20 +16,7 @@ export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, recei
     useEffect(() => {
         if (accounts) {
             setTimeout(async () => {
-                await EINRContract.methods.EGOLD().call({ from: accounts[0] })
-                    .then(e => {
-                        //console.log(e);
-                        setEINR_EGOLDAdd(e);
-                    })
-                    .catch(err => console.log(err));
-
-
-                await EGOLDContract.methods._EINR().call({ from: accounts[0] })
-                    .then(async (e) => {
-                        //console.log(e);
-                        setEGOLD_EINRAdd(e);
-                    })
-                    .catch(err => console.log(err));
+                getDataHandler();
             }, 100)
         } else {
             setEINR_EGOLDAdd('--');

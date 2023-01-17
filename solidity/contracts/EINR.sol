@@ -5,9 +5,9 @@ pragma solidity ^0.8.17;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract EINRContract is ERC20{
-    event Minted(address _to, uint256 _amount);
-    event EGOLDAddressSet(address _setBy, address _EGOLDAdd);
-    event TransferEINRtoEGOLD(address _from, address _to, uint256 _amount);
+    event Minted(address indexed _to, uint256 _amount);
+    event EGOLDAddressSet(address indexed _setBy, address indexed _EGOLDAdd);
+    event TransferEINRtoEGOLD(address indexed _from, address _to, uint256 _amount);
 
     address public EGOLD;
 

@@ -15,12 +15,7 @@ export default function EINR({ backdrop, setBackdrop, tx, setTx, receipt, setRec
     useEffect(() => {
         if (accounts) {
             setTimeout(async () => {
-                await EINRContract.methods.balanceOf(accounts[0]).call({ from: accounts[0] })
-                    .then(e => {
-                        //console.log(e);
-                        setMyBalance(Web3.utils.fromWei(e, "ether"));
-                    })
-                    .catch(err => console.log(err));
+                getDataHandler();
             }, 100)
         } else {
             setMyBalance(null);

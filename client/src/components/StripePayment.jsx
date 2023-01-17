@@ -9,7 +9,7 @@ const PUBLIC_KEY = "pk_test_51MPOvKSH9teV89VTVMCvOqd85C91CTFEZQCsFTMTJP1vcM2Pqck
 
 const stripeTestPromise = loadStripe(PUBLIC_KEY)
 
-export default function StripePayment({ set_Tx, success, setSuccess, totalPrice, account }) {
+export default function StripePayment({ set_Tx, success, setSuccess, setRID, totalPrice, account }) {
     return (
         <>
             < div className={classes.backdrop} />
@@ -17,6 +17,7 @@ export default function StripePayment({ set_Tx, success, setSuccess, totalPrice,
                 <PaymentForm
                     set_Tx={set_Tx}
                     success={success}
+                    setRID={setRID}
                     setSuccess={setSuccess}
                     totalPrice={totalPrice}
                     account={account}

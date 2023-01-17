@@ -6,7 +6,7 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import classes from './Tx.module.css';
 
-export default function PaymentForm({ success, setSuccess, set_Tx, totalPrice, account }) {
+export default function PaymentForm({ set_Tx, success, setSuccess, setRID, totalPrice, account }) {
     const stripe = useStripe()
     const elements = useElements()
     const [payBackdrop, setPayBackdrop] = useState(false);
@@ -31,6 +31,7 @@ export default function PaymentForm({ success, setSuccess, set_Tx, totalPrice, a
                 // console.log(response)
                 if (response.data.success) {
                     console.log("Successful payment")
+                    setRID(response.data.id)
                     setPayBackdrop(false);
                     setSuccess(true);
                 }
