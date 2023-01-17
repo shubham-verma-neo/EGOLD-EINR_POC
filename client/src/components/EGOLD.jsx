@@ -145,7 +145,7 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
     }
 
     return (
-        <div style={{display:"flex", flexDirection:"column", gap: "100px"}}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "100px" }}>
             {backdrop && <Tx backdrop={backdrop} setBackdrop={setBackdrop} tx={tx} setTx={setTx} receipt={receipt} setReceipt={setReceipt} />}
             <div>
                 <h1>Data</h1>
@@ -203,8 +203,7 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
                     justifyContent: "center",
                     gap: "75px",
                 }}>
-                    <label><h5>{`Total Cost EINR: ${EINRperEGOLD * buy}`} </h5></label>
-                    <label><h5>{`Total Cost INR: ${INRperEGOLD * buy}`} </h5></label>
+                    {funcName && <label><h5>{`Total Cost : ${funcName === 'buyEGOLD1' ? EINRperEGOLD * buy : INRperEGOLD * buy} ${funcName === 'buyEGOLD1' ? 'EINR' : 'INR'}`} </h5></label>}
                 </div>
                 <div style={{
                     padding: "0.5rem",
