@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import Table from 'react-bootstrap/Table';
 import Tx from './Tx';
+import Button from 'react-bootstrap/Button';
 import useMeta from '../MetamaskLogin/useMeta';
 
 export default function EGOLDConfig({ backdrop, setBackdrop, tx, setTx, receipt, setReceipt }) {
@@ -102,6 +103,7 @@ export default function EGOLDConfig({ backdrop, setBackdrop, tx, setTx, receipt,
         setEGOLDpriceINR("0");
     }
 
+
     return (
         <div>
             {backdrop && <Tx backdrop={backdrop} setBackdrop={setBackdrop} tx={tx} setTx={setTx} receipt={receipt} setReceipt={setReceipt} />}
@@ -127,17 +129,25 @@ export default function EGOLDConfig({ backdrop, setBackdrop, tx, setTx, receipt,
                 display: "flex",
                 gap: "50px"
             }}>
-                <div>
+                <div style={{
+                    gap: "10px"
+                }}>
                     <label><h5>Set EGOLD Price EINR</h5></label><br />
                     <input onChange={setEGOLD_EINR_PriceHandler} value={EGOLDpriceEINR} type='number' min={1} placeholder='Price in EINR' />
-                    <button onClick={setEGOLD_EINR}>Set</button> <br />
+                    <Button onClick={setEGOLD_EINR} variant="primary" size="sz" >
+                        Set
+                    </Button><br />
+
                 </div>
                 <div>
                     <label><h5>Set EGOLD Price INR</h5></label><br />
                     <input onChange={setEGOLD_INR_PriceHandler} value={EGOLDpriceINR} type='number' min={1} placeholder='Price in EINR' />
-                    <button onClick={setEGOLD_INR}>Set</button> <br />
+                    <Button onClick={setEGOLD_INR} variant="primary" size="sz" >
+                        Set
+                    </Button><br />
                 </div>
             </div>
+
         </div>
     )
 }

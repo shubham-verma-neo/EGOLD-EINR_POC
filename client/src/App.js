@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import EINR from './components/EINR';
 import EGOLD from './components/EGOLD';
+import Inventory from './components/Inventory';
 import EGOLDConfig from './components/EGOLDConfig';
 import ContractConfig from './components/ContractConfig';
 import { MetaProvider } from './MetamaskLogin';
@@ -29,6 +30,10 @@ function App() {
 
           <Route path='/EGOLD' element={
             <EGOLD backdrop={backdrop} setBackdrop={setBackdrop} tx={tx} setTx={setTx} receipt={receipt} setReceipt={setReceipt} />
+          } />
+
+          <Route path='/Inventory' element={
+            <Inventory backdrop={backdrop} setBackdrop={setBackdrop} tx={tx} setTx={setTx} receipt={receipt} setReceipt={setReceipt} />
           } />
 
           <Route path='/ContractConfig' element={

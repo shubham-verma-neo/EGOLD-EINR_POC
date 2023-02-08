@@ -241,7 +241,7 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
                     </Form>
                 </div>
                 <div className="d-grid gap-2">
-                    <Button variant="primary" size="lg" onClick={finalBuy}>
+                    <Button variant="primary" size="sz" onClick={finalBuy}>
                         Buy
                     </Button>
                 </div>

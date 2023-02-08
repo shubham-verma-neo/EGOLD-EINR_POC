@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import Table from 'react-bootstrap/Table';
 import Tx from './Tx';
+import Button from 'react-bootstrap/Button';
 import useMeta from '../MetamaskLogin/useMeta';
 
 export default function EINR({ backdrop, setBackdrop, tx, setTx, receipt, setReceipt }) {
@@ -83,7 +84,9 @@ export default function EINR({ backdrop, setBackdrop, tx, setTx, receipt, setRec
             }}>
                 <label><h5>EINR</h5></label>
                 <input onChange={setMintHandler} value={mint} type='number' min={1} placeholder='Enter EINR Amount' />
-                <button onClick={mintEINR}>Mint</button>
+                <Button onClick={mintEINR} variant="primary" size="sz" >
+                        Set
+                    </Button>
 
             </div>
         </div>
