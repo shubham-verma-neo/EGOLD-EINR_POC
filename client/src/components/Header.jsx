@@ -30,9 +30,10 @@ function Header() {
                     <Navbar.Brand >EGOLD/EINR</Navbar.Brand>
                     <Nav className="me-auto">
                         <Nav.Link as={Link} to="/EINR">EINR</Nav.Link>
+                        <Nav.Link as={Link} to="/EUSD">EUSD</Nav.Link>
                         <Nav.Link as={Link} to="/EGOLD">EGOLD</Nav.Link>
                         <Nav.Link as={Link} to="/Inventory">Inventory</Nav.Link>
-                        <Nav.Link as={Link} to="/EGOLDConfig">EGOLDConfig</Nav.Link>
+                        {/* <Nav.Link as={Link} to="/EGOLDConfig">EGOLDConfig</Nav.Link> */}
                         <Nav.Link as={Link} to="/ContractConfig">ContractConfig</Nav.Link>
                     </Nav>
                 </Container>

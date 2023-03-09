@@ -9,8 +9,8 @@ function MetaProvider({ children }) {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const init = useCallback(
-        async (EINRArtifact, EGOLDArtifact, InventoryArtifact) => {
-            if (EINRArtifact && EGOLDArtifact && InventoryArtifact) {
+        async (EINRArtifact, EUSDArtifact, EGOLDArtifact, InventoryArtifact) => {
+            if (EINRArtifact && EUSDArtifact && EGOLDArtifact && InventoryArtifact) {
                 const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
                 let accounts;
                 setTimeout(async () => {
@@ -27,6 +27,15 @@ function MetaProvider({ children }) {
                 try {
                     EINRAddress = EINRArtifact.networks[networkID].address;
                     EINRContract = new web3.eth.Contract(abi, EINRAddress);
+                } catch (error) {
+                    console.log(error);
+                }
+
+                ({ abi } = EUSDArtifact);
+                let EUSDAddress, EUSDContract;
+                try {
+                    EUSDAddress = EUSDArtifact.networks[networkID].address;
+                    EUSDContract = new web3.eth.Contract(abi, EUSDAddress);
                 } catch (error) {
                     console.log(error);
                 }
@@ -52,9 +61,9 @@ function MetaProvider({ children }) {
                 dispatch({
                     type: 'init',
                     data: {
-                        EINRArtifact, EGOLDArtifact, InventoryArtifact,
-                        EINRContract, EGOLDContract, InventoryContract,
-                        EINRAddress, EGOLDAddress, InventoryAddress,
+                        EINRArtifact, EUSDArtifact, EGOLDArtifact, InventoryArtifact,
+                        EINRContract, EUSDContract, EGOLDContract, InventoryContract,
+                        EINRAddress,  EUSDAddress,  EGOLDAddress,  InventoryAddress,
                         web3, networkID, accounts
                     }
                 })
@@ -66,9 +75,10 @@ function MetaProvider({ children }) {
         const tryInit = async () => {
             try {
                 const EINRArtifact = require('../contracts/EINRContract.json');
+                const EUSDArtifact = require('../contracts/EUSDContract.json');
                 const EGOLDArtifact = require('../contracts/EGOLDContract.json');
                 const InventoryArtifact = require('../contracts/Inventory.json');
-                init(EINRArtifact, EGOLDArtifact, InventoryArtifact);
+                init(EINRArtifact, EUSDArtifact, EGOLDArtifact, InventoryArtifact);
             } catch (error) {
                 console.log(error);
             }
@@ -79,7 +89,7 @@ function MetaProvider({ children }) {
     useEffect(() => {
         const events = ["chainChanged", "accountsChanged"];
         const handleChange = () => {
-            init(state.EINRArtifact, state.EGOLDArtifact, state.InventoryArtifact);
+            init(state.EINRArtifact, state.EUSDArtifact, state.EGOLDArtifact, state.InventoryArtifact);
             const accounts = null;
             localStorage.removeItem('Address');
             dispatch({
@@ -92,7 +102,7 @@ function MetaProvider({ children }) {
         return () => {
             events.forEach(e => window.ethereum.removeListener(e, handleChange));
         };
-    }, [init, state.EINRArtifact, state.EGOLDArtifact, state.InventoryArtifact]);
+    }, [init, state.EINRArtifact, state.EUSDArtifact, state.EGOLDArtifact, state.InventoryArtifact]);
 
     const logIn = async () => {
         try {

@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import EINR from './components/EINR';
+import EUSD from './components/EUSD';
 import EGOLD from './components/EGOLD';
 import Inventory from './components/Inventory';
-import EGOLDConfig from './components/EGOLDConfig';
 import ContractConfig from './components/ContractConfig';
 import { MetaProvider } from './MetamaskLogin';
 
@@ -28,6 +28,10 @@ function App() {
             <EINR backdrop={backdrop} setBackdrop={setBackdrop} tx={tx} setTx={setTx} receipt={receipt} setReceipt={setReceipt} />
           } />
 
+          <Route path='/EUSD' element={
+            <EUSD backdrop={backdrop} setBackdrop={setBackdrop} tx={tx} setTx={setTx} receipt={receipt} setReceipt={setReceipt} />
+          } />
+
           <Route path='/EGOLD' element={
             <EGOLD backdrop={backdrop} setBackdrop={setBackdrop} tx={tx} setTx={setTx} receipt={receipt} setReceipt={setReceipt} />
           } />
@@ -40,9 +44,6 @@ function App() {
             <ContractConfig backdrop={backdrop} setBackdrop={setBackdrop} tx={tx} setTx={setTx} receipt={receipt} setReceipt={setReceipt} />
           } />
 
-          <Route path='/EGOLDConfig' element={
-            <EGOLDConfig backdrop={backdrop} setBackdrop={setBackdrop} tx={tx} setTx={setTx} receipt={receipt} setReceipt={setReceipt} />
-          } />
         </Routes>
       </Router>
     </MetaProvider>

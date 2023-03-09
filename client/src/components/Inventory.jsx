@@ -102,36 +102,36 @@ export default function Inventory({ backdrop, setBackdrop, tx, setTx, receipt, s
         set_Inventory("");
     }
 
-    const seteRatioHandler = (e) => {
-        set_eGOLDRatio(e.target.value);
-    }
+    // const seteRatioHandler = (e) => {
+    //     set_eGOLDRatio(e.target.value);
+    // }
 
-    const eRatio = async () => {
-        if (!accounts) {
-            alert("Please Connect Wallet.");
-            return;
-        }
-        if (_eGOLDRatio === "") {
-            alert("Quantity should not be zero.");
-            return;
-        }
-        setBackdrop(true);
-        await InventoryContract.methods.setRatio(Web3.utils.toWei(_eGOLDRatio, "ether"))
-            .send({
-                from: accounts[0]
-            })
-            .then(e => {
-                //console.log(e);
-                setReceipt(e)
-                setTx(true);
-            })
-            .catch(err => {
-                setBackdrop(false);
-                console.log(err)
-            });
-        getDataHandler();
-        set_eGOLDRatio("");
-    }
+    // const eRatio = async () => {
+    //     if (!accounts) {
+    //         alert("Please Connect Wallet.");
+    //         return;
+    //     }
+    //     if (_eGOLDRatio === "") {
+    //         alert("Quantity should not be zero.");
+    //         return;
+    //     }
+    //     setBackdrop(true);
+    //     await InventoryContract.methods.setRatio(Web3.utils.toWei(_eGOLDRatio, "ether"))
+    //         .send({
+    //             from: accounts[0]
+    //         })
+    //         .then(e => {
+    //             //console.log(e);
+    //             setReceipt(e)
+    //             setTx(true);
+    //         })
+    //         .catch(err => {
+    //             setBackdrop(false);
+    //             console.log(err)
+    //         });
+    //     getDataHandler();
+    //     set_eGOLDRatio("");
+    // }
 
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: "100px" }}>
@@ -187,7 +187,7 @@ export default function Inventory({ backdrop, setBackdrop, tx, setTx, receipt, s
 
                 </div>
 
-                <div>
+                {/* <div>
                     <div>
                         <h4>Set eGOLD Ratio</h4>
                     </div>
@@ -204,7 +204,7 @@ export default function Inventory({ backdrop, setBackdrop, tx, setTx, receipt, s
                         </Button>
                     </div>
 
-                </div>
+                </div> */}
             </div>
 
         </div>

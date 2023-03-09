@@ -5,10 +5,10 @@ pragma solidity ^0.8.17;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract EINRContract is Ownable, ERC20 {
+contract EUSDContract is Ownable, ERC20 {
     event Minted(address indexed _owner, address indexed _to, uint256 _amount);
     event EGOLDAddressSet(address indexed _setBy, address indexed _EGOLDAdd);
-    event TransferEINRtoEGOLD(
+    event TransferEUSDtoEGOLD(
         address indexed _from,
         address _to,
         uint256 _amount
@@ -16,7 +16,7 @@ contract EINRContract is Ownable, ERC20 {
 
     address public EGOLD;
 
-    constructor() ERC20("EINR", "EINR") {}
+    constructor() ERC20("EUSD", "EUSD") {}
 
     modifier onlyEGOLD() {
         require(msg.sender == EGOLD, "only EGOLD contract");
@@ -35,6 +35,6 @@ contract EINRContract is Ownable, ERC20 {
 
     function transferBal(address _from, uint256 _amount) external onlyEGOLD {
         _transfer(_from, EGOLD, _amount);
-        emit TransferEINRtoEGOLD(_from, EGOLD, _amount);
+        emit TransferEUSDtoEGOLD(_from, EGOLD, _amount);
     }
 }

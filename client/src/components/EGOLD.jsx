@@ -12,11 +12,12 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
     const { state: { EGOLDContract, accounts } } = useMeta();
     const [totalSupply, setTotalSupply] = useState("");
     const [availableSupply, setAvailableSupply] = useState("");
-    const [EINRperEGOLD, setEINRperEGOLD] = useState("");
     const [INRperEGOLD, setINRperEGOLD] = useState("");
+    const [USDperEGOLD, setUSDperEGOLD] = useState("");
     const [myBalance, setMyBalance] = useState("");
 
     const [buy, setBuy] = useState("0");
+    const [totalPrice, setTotalPrice] =  useState("0")
     const [_Tx, set_Tx] = useState(false);
     const [success, setSuccess] = useState(false);
     const [RID, setRID] = useState("");
@@ -38,7 +39,7 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
         } else {
             setTotalSupply(null);
             setAvailableSupply(null);
-            setEINRperEGOLD(null);
+            setUSDperEGOLD(null);
             setINRperEGOLD(null);
             setMyBalance(null);
         }
@@ -52,17 +53,17 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
             })
             .catch(err => console.log(err));
 
-        await EGOLDContract.methods.EGoldPriceEINR().call({ from: accounts[0] })
-            .then(e => {
-                //console.log(e);
-                setEINRperEGOLD(Web3.utils.fromWei(e, "ether"));
-            })
-            .catch(err => console.log(err));
-
         await EGOLDContract.methods.EGoldPriceINR().call({ from: accounts[0] })
             .then(e => {
                 //console.log(e);
                 setINRperEGOLD(Web3.utils.fromWei(e, "ether"));
+            })
+            .catch(err => console.log(err));
+
+        await EGOLDContract.methods.EGoldPriceUSD().call({ from: accounts[0] })
+            .then(e => {
+                //console.log(e);
+                setUSDperEGOLD(Web3.utils.fromWei(e, "ether"));
             })
             .catch(err => console.log(err));
 
@@ -78,8 +79,7 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
         setBuy(e.target.value);
     }
 
-
-    const buyEGOLD1 = async () => {
+    const __EINR = async () => {
         setBackdrop(true);
         await EGOLDContract.methods.buyEGoldEINR(Web3.utils.toWei(buy, "ether"))
             .send({
@@ -96,38 +96,87 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
             });
         getDataHandler();
         setBuy("0");
+        setFuncName("");
+    }
+
+    const __EUSD = async () => {
+        setBackdrop(true);
+        await EGOLDContract.methods.buyEGoldEUSD(Web3.utils.toWei(buy, "ether"))
+            .send({
+                from: accounts[0]
+            })
+            .then(e => {
+                //console.log(e);
+                setReceipt(e)
+                setTx(true);
+            })
+            .catch(async (err) => {
+                setBackdrop(false);
+                console.log(err)
+            });
+        getDataHandler();
+        setBuy("0");
+        setFuncName("");
     }
 
     useEffect(() => {
         if (success) {
             setBackdrop(true);
+            setTx(true);
+            setBuy("0");
             setTimeout(async () => {
-                await EGOLDContract.methods.buyEGoldINR(Web3.utils.toWei(buy, "ether"), RID)
-                    .send({
-                        from: accounts[0]
-                    })
-                    .then(e => {
-                        //console.log(e);
-                        setReceipt(e)
-                        setRID("");
-                        setTx(true);
-                    })
-                    .catch(async (err) => {
-                        setBackdrop(false);
-                        console.log(err)
-                    });
                 getDataHandler();
-                setBuy("0");
                 setSuccess(false);
-            })
+            }, 6000)
+            // setTimeout(async () => {
+            //     funcName.includes("INR") ?
+            //         await EGOLDContract.methods.buyEGoldINR(Web3.utils.toWei(buy, "ether"), RID)
+            //             .send({
+            //                 from: accounts[0]
+            //             })
+            //             .then(e => {
+            //                 //console.log(e);
+            //                 setReceipt(e)
+            //                 setRID("");
+            //                 setTx(true);
+            //             })
+            //             .catch(async (err) => {
+            //                 setBackdrop(false);
+            //                 console.log(err)
+            //                 console.log("INR")
+            //             })
+
+            //         :
+
+            //         await EGOLDContract.methods.buyEGoldUSD(Web3.utils.toWei(buy, "ether"), RID)
+            //             .send({
+            //                 from: accounts[0]
+            //             })
+            //             .then(e => {
+            //                 //console.log(e);
+            //                 setReceipt(e)
+            //                 setRID("");
+            //                 setTx(true);
+            //             })
+            //             .catch(async (err) => {
+            //                 setBackdrop(false);
+            //                 console.log(err)
+            //                 console.log("USD")
+            //             })
+
+            //     getDataHandler();
+            //     setBuy("0");
+            //     setSuccess(false);
+            //     setFuncName("");
+            // })
         }
     }, [success])
 
-    const buyEGOLD2 = () => {
+    const __cash = () => {
         set_Tx(true);
     }
 
-    const finalBuy = () => {
+    const buyGOLD = (e) => {
         if (!accounts) {
             alert("Please Connect Wallet.");
             return;
@@ -138,12 +187,27 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
             return;
         }
 
-        funcName ?
-            funcName === 'buyEGOLD1' ? buyEGOLD1() : buyEGOLD2()
-            :
-            alert("Please select payment method."); return;
-    }
+        switch (e) {
+            case "EINR":
+                __EINR();
+                break;
 
+            case "INR":
+                __cash();
+                break;
+
+            case "EUSD":
+                __EUSD();
+                break;
+
+            case "USD":
+                __cash();
+                break;
+
+            default:
+                alert("Please select Payment Method.")
+        }
+    }
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: "100px" }}>
             {backdrop && <Tx backdrop={backdrop} setBackdrop={setBackdrop} tx={tx} setTx={setTx} receipt={receipt} setReceipt={setReceipt} />}
@@ -167,15 +231,15 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
                     <tbody>
                         <tr>
                             <th>3</th>
-                            <th>EINR Per EGOLD </th>
-                            <td>{EINRperEGOLD ? `${EINRperEGOLD} EINR` : '--'}</td>
+                            <th>INR or EINR Per EGOLD </th>
+                            <td>{INRperEGOLD ? `${INRperEGOLD} INR or EINR` : '--'}</td>
                         </tr>
                     </tbody>
                     <tbody>
                         <tr>
                             <th>4</th>
-                            <th>INR Per EGOLD </th>
-                            <td>{INRperEGOLD ? `${INRperEGOLD} INR` : '--'}</td>
+                            <th>USD or EUSD Per EGOLD </th>
+                            <td>{USDperEGOLD ? `${USDperEGOLD} USD or EUSD` : '--'}</td>
                         </tr>
                     </tbody>
                     <tbody>
@@ -203,12 +267,12 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
                     justifyContent: "center",
                     gap: "75px",
                 }}>
-                    {funcName && <label><h5>{`Total Cost : ${funcName === 'buyEGOLD1' ? EINRperEGOLD * buy : INRperEGOLD * buy} ${funcName === 'buyEGOLD1' ? 'EINR' : 'INR'}`} </h5></label>}
+                    {funcName && <label><h5>{`Total Cost : ${funcName.includes("INR") ? INRperEGOLD * buy : USDperEGOLD * buy} ${funcName}`} </h5></label>}
                 </div>
                 <div style={{
                     padding: "0.5rem",
                     display: "flex",
-                    gap: "100px"
+                    gap: "60px"
                 }}>
                     <label><h5>Enter EGold Qty.</h5></label>
                     <input onChange={setBuyHandler} value={buy} type='number' min={1} placeholder='EGOLD Qty.' />
@@ -218,7 +282,7 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
                     display: "flex",
                     gap: "25px"
                 }}>
-                    <label><h5>Select Payment Method :</h5></label>
+                    <label><h5>Payment Method :</h5></label>
                     <Form>
                         <div key='inline-radio' className="mb-3">
                             <Form.Check
@@ -227,7 +291,7 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
                                 name="BuyEGOLD"
                                 type='radio'
                                 id='1'
-                                onChange={() => { setFuncName('buyEGOLD1') }}
+                                onChange={() => { setFuncName('EINR') }}
                             />
                             <Form.Check
                                 inline
@@ -235,13 +299,29 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
                                 name="BuyEGOLD"
                                 type='radio'
                                 id='2'
-                                onChange={() => { setFuncName('buyEGOLD2') }}
+                                onChange={() => { setFuncName('INR') }}
+                            />
+                            <Form.Check
+                                inline
+                                label={<strong>EUSD</strong>}
+                                name="BuyEGOLD"
+                                type='radio'
+                                id='3'
+                                onChange={() => { setFuncName('EUSD') }}
+                            />
+                            <Form.Check
+                                inline
+                                label={<strong>USD</strong>}
+                                name="BuyEGOLD"
+                                type='radio'
+                                id='4'
+                                onChange={() => { setFuncName('USD') }}
                             />
                         </div>
                     </Form>
                 </div>
                 <div className="d-grid gap-2">
-                    <Button variant="primary" size="sz" onClick={finalBuy}>
+                    <Button variant="primary" size="sz" onClick={() => { buyGOLD(funcName) }}>
                         Buy
                     </Button>
                 </div>
@@ -249,11 +329,14 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
 
             {_Tx && <StripePayment
                 set_Tx={set_Tx}
+                setReceipt={setReceipt}
                 success={success}
                 setSuccess={setSuccess}
                 setRID={setRID}
-                totalPrice={INRperEGOLD * buy}
+                totalPrice={funcName.includes("INR") ? INRperEGOLD * buy : USDperEGOLD * buy}
                 account={accounts[0]}
+                from={`${funcName}`}
+                to={`EGOLD`}
             />}
         </div>
     )

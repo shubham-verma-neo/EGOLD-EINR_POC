@@ -2,9 +2,10 @@
 
 pragma solidity ^0.8.17;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "./EGOLD.sol";
 
-contract Inventory {
+contract Inventory is Ownable{
     event EGOLDAddressSet(address _EGOLDAddress);
     event eGOLDRatio(uint256 _eGOLDTokens);
     event InventoryAdded(address _addBy, uint256 _amount);
@@ -20,8 +21,9 @@ contract Inventory {
         _;
     }
 
-    constructor() {
+    constructor(uint256 _eGOLDRatio) {
         admin = msg.sender;
+        eGOLDratio = _eGOLDRatio * 10**18;
     }
 
     function setEGOLDAddress(address _EGOLDAddress) public onlyAdmin {
@@ -29,12 +31,13 @@ contract Inventory {
         emit EGOLDAddressSet(_EGOLDAddress);
     }
 
-    function setRatio(uint256 _eGOLD)public onlyAdmin{
-        eGOLDratio = _eGOLD;
-        emit eGOLDRatio(_eGOLD);
-    }
+    // function setRatio(uint256 _eGOLD)public onlyAdmin{
+    //     eGOLDratio = _eGOLD;
+    //     emit eGOLDRatio(_eGOLD);
+    // }
 
     function addInventory(uint256 _amount) public onlyAdmin {
+        require(address(EGOLDAdd) != address(0), "EGOLD address not set.");
         require(eGOLDratio > 0, "eGOLDRatio should not be zero.");
         inventory += _amount;
         EGOLDAdd.mint(_amount * eGOLDratio);
@@ -42,6 +45,7 @@ contract Inventory {
     }
 
     function removeInventory(uint256 _amount) public onlyAdmin {
+        require(address(EGOLDAdd) != address(0), "EGOLD address not set.");
         require(eGOLDratio > 0, "eGOLDRatio should not be zero.");
         require(inventory >= _amount, "Insufficient inventory.");
         inventory -= _amount;
