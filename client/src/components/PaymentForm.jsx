@@ -43,7 +43,22 @@ export default function PaymentForm({ _Tx, set_Tx, setReceipt, success, setSucce
                         card: cardElement,
                     },
                 });
+                if (payload.error) {
+                    // console.log(payload.error)
+                    class PayloadError extends Error {
+                        constructor(message, data) {
+                            super(message);
+                            this.name = "CustomError";
+                            this.data = data;
+                        }
+                        getCustomData() {
+                            return this.data;
+                        }
+                    }
+                    throw new PayloadError("Payload Error.", { error: `${payload.error.message}` });
+                }
             }
+
             console.log(payload, "payload")
 
 
@@ -64,7 +79,7 @@ export default function PaymentForm({ _Tx, set_Tx, setReceipt, success, setSucce
 
         } catch (error) {
             console.log("Error", error)
-            alert (`Transaction Failed.`)
+            alert(`Transaction Failed. ${error.data.error}`)
             setPayBackdrop(false);
         }
 

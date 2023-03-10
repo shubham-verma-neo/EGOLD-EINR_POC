@@ -5,9 +5,6 @@ const bodyParser = require("body-parser")
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-const { id, web3, networkID, EINRAddress, EINRContract, EUSDAddress, EUSDContract, EGOLDAddress, EGOLDContract, InventoryAddress, InventoryContract } = require('../server/startup/web3');
-console.log(id, EUSDAddress);
-// require('./startup/web3');
 require('./startup/mongoDB')();
 require('./startup/routes')(app, express);
 require('./routes/cron');
