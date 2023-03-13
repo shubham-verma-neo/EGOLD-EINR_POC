@@ -4,16 +4,21 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_TEST)
 const cf = require('cashfree-sdk');
 const { Transactions } = require('../model/transaction.model');
 const cors = require("cors")
+const Razorpay = require('razorpay');
+
+var rozarPay = new Razorpay({
+    key_id: 'rzp_test_mUTZOW7Dv34UnQ',
+    key_secret: process.env.RAZOR_SECRET_TEST,
+});
 
 router.use(cors())
 
 router.post("/stripe", cors(), async (req, res) => {
     let { address, amount, from, to, shipping } = req.body
-    // console.log(address, " address", amount, " amount", from, " from" ,to, " to",shipping, " shipping")
     let transaction;
     try {
 
-    let payment;
+        let payment;
         payment = await stripe.paymentIntents.create({
             amount: amount * 100,
             currency: from,
@@ -30,7 +35,6 @@ router.post("/stripe", cors(), async (req, res) => {
                 },
             },
         })
-        // console.log(payment.id)
         transaction = await new Transactions({
             transactionId: payment.id,
             address: address,
@@ -39,8 +43,6 @@ router.post("/stripe", cors(), async (req, res) => {
             to: to,
             status: false
         }).save();
-        // console.log("tran", transaction)
-        // console.log("Payment", payment)
 
         res.json({
             message: "Payment initiated.",
@@ -57,26 +59,43 @@ router.post("/stripe", cors(), async (req, res) => {
     }
 })
 
-router.post('/cashFree', async (req, res) => {
-    const data = {
-        "orderId": "ORD0001",
-        "orderAmount": "1000",
-        "orderCurrency": "INR",
-        "customerName": "John Doe",
-        "customerEmail": "john.doe@example.com",
-        "customerPhone": "9999999999",
-        "returnUrl": "https://example.com/return",
-        "notifyUrl": "https://example.com/notify"
+
+router.post('/razorPay', cors(), async (req, res) => {
+    let { address, amount, from, to, shipping } = req.body;
+    let transaction;
+
+    const options = {
+        amount: amount * 100, // amount in paise
+        currency: from,
+        receipt: `receipt_${Math.floor(Date.now() / 1000)}`,
     };
 
-    const config = {
-        "env": "test",
-        "appId": "3198133a3c0350e72ab3c28040318913",
-        "secretKey": "437ee22410689deb88c0d9d37b25937fb224f5db"
-    };
+    try {
+        const order = await rozarPay.orders.create(options);
 
-    const paymentOrder = await cf.Payment.Order.create(data, config);
-    console.log(paymentOrder);
+        transaction = await new Transactions({
+            transactionId: order.id,
+            address: address,
+            amount: amount,
+            from: from,
+            to: to,
+            status: false
+        }).save();
 
-})
+        res.json({
+            message: "Payment initiated.",
+            success: true,
+            order: order
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            message: "Order creation failed",
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+
 module.exports = router;

@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
+import RozarPay from './RozarPay';
 
 export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setReceipt }) {
     const { state: { EGOLDContract, accounts } } = useMeta();
@@ -17,8 +18,9 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
     const [myBalance, setMyBalance] = useState("");
 
     const [buy, setBuy] = useState("0");
-    const [totalPrice, setTotalPrice] =  useState("0")
+    const [totalPrice, setTotalPrice] = useState("0")
     const [_Tx, set_Tx] = useState(false);
+    const [inr, setInr] = useState(false);
     const [success, setSuccess] = useState(false);
     const [RID, setRID] = useState("");
 
@@ -175,13 +177,15 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
     const __cash = () => {
         set_Tx(true);
     }
-
     const buyGOLD = (e) => {
         if (!accounts) {
             alert("Please Connect Wallet.");
             return;
         }
-
+        if (availableSupply < buy) {
+            alert("Insufficient EGOLD supply.");
+            return;
+        }
         if (buy === "0") {
             alert("Enter valid quantity of EGOLD.");
             return;
@@ -327,17 +331,32 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
                 </div>
             </div>
 
-            {_Tx && <StripePayment
-                set_Tx={set_Tx}
-                setReceipt={setReceipt}
-                success={success}
-                setSuccess={setSuccess}
-                setRID={setRID}
-                totalPrice={funcName.includes("INR") ? INRperEGOLD * buy : USDperEGOLD * buy}
-                account={accounts[0]}
-                from={`${funcName}`}
-                to={`EGOLD`}
-            />}
+            {funcName && funcName.includes("INR") ?
+                (_Tx && <RozarPay
+                    _Tx={_Tx}
+                    set_Tx={set_Tx}
+                    setReceipt={setReceipt}
+                    success={success}
+                    setSuccess={setSuccess}
+                    setRID={setRID}
+                    totalPrice={(INRperEGOLD * buy)}
+                    account={accounts[0]}
+                    from={`${funcName}`}
+                    to={`EGOLD`}
+                />)
+                :
+                (_Tx && <StripePayment
+                    set_Tx={set_Tx}
+                    setReceipt={setReceipt}
+                    success={success}
+                    setSuccess={setSuccess}
+                    setRID={setRID}
+                    totalPrice={(USDperEGOLD * buy)}
+                    account={accounts[0]}
+                    from={`${funcName}`}
+                    to={`EGOLD`}
+                />)
+            }
         </div>
     )
 }

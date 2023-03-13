@@ -16,6 +16,10 @@ function MetaProvider({ children }) {
                 setTimeout(async () => {
                     if (localStorage.getItem('Address')) {
                         accounts = await web3.eth.requestAccounts();
+                        dispatch({
+                            type: 'login',
+                            data: { accounts }
+                        })
                     }
                     else {
                         accounts = null;
@@ -63,7 +67,7 @@ function MetaProvider({ children }) {
                     data: {
                         EINRArtifact, EUSDArtifact, EGOLDArtifact, InventoryArtifact,
                         EINRContract, EUSDContract, EGOLDContract, InventoryContract,
-                        EINRAddress,  EUSDAddress,  EGOLDAddress,  InventoryAddress,
+                        EINRAddress, EUSDAddress, EGOLDAddress, InventoryAddress,
                         web3, networkID, accounts
                     }
                 })

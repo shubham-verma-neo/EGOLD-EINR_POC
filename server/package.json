@@ -20,6 +20,7 @@
     "mongoose": "^6.10.0",
     "moongose": "^1.0.0",
     "node-cron": "^3.0.2",
+    "razorpay": "^2.8.6",
     "redux": "^4.2.1",
     "stripe": "^8.131.1",
     "web3": "^1.8.2"

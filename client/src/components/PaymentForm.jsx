@@ -24,7 +24,7 @@ export default function PaymentForm({ _Tx, set_Tx, setReceipt, success, setSucce
         setPayBackdrop(true);
 
         try {
-            console.log(account, " address", totalPrice, " amount", from, " from", to, " to", shipping, " shipping")
+            // console.log(account, " address", totalPrice, " amount", from, " from", to, " to", shipping, " shipping")
 
             const response = await axios.post("http://localhost:4000/payments/stripe", {
                 address: account,
@@ -34,7 +34,7 @@ export default function PaymentForm({ _Tx, set_Tx, setReceipt, success, setSucce
                 shipping: shipping
             })
             // console.log(shipping)
-            console.log(response, "response")
+            // console.log(response, "response")
 
             let payload;
             if (response.data.success) {
@@ -59,15 +59,16 @@ export default function PaymentForm({ _Tx, set_Tx, setReceipt, success, setSucce
                 }
             }
 
-            console.log(payload, "payload")
+            // console.log(payload, "payload")
 
 
             if (payload.paymentIntent.status == "succeeded") {
-                console.log(payload.paymentIntent.id, "payload pi")
+                // console.log(payload.paymentIntent.id, "payload pi")
                 const response = await axios.post(`http://localhost:4000/crypto/${to}`, {
                     transactionId: payload.paymentIntent.id,
                     address: account,
                     amount: payload.paymentIntent.amount / 100,
+                    fro: from
                 })
                 // console.log(response)
 

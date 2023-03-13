@@ -27,7 +27,7 @@ contract EGOLDContract is Ownable, ERC20 {
     event EGOLD_INR_Transfer(
         address _from,
         address indexed _to,
-        string indexed _receipt,
+        bytes32 indexed _receipt,
         uint256 _EGoldmount,
         uint256 _INRAmount
     );
@@ -40,7 +40,7 @@ contract EGOLDContract is Ownable, ERC20 {
     event EGOLD_USD_Transfer(
         address _from,
         address indexed _to,
-        string indexed _receipt,
+        bytes32 indexed _receipt,
         uint256 _EGoldmount,
         uint256 _USDAmount
     );
@@ -129,7 +129,7 @@ contract EGOLDContract is Ownable, ERC20 {
         );
     }
 
-    function buyEGoldINR(uint256 _EGoldAmount, address _to, string memory _receipt) public onlyOwner{
+    function buyEGoldINR(uint256 _EGoldAmount, address _to, bytes32 _receipt) public onlyOwner{
         require(
             balanceOf(address(this)) >= _EGoldAmount,
             "Insufficient EGOLD in Contract."
@@ -170,7 +170,7 @@ contract EGOLDContract is Ownable, ERC20 {
         );
     }
 
-    function buyEGoldUSD(uint256 _EGoldAmount, address _to, string memory _receipt) public onlyOwner{
+    function buyEGoldUSD(uint256 _EGoldAmount, address _to, bytes32 _receipt) public onlyOwner{
         require(
             balanceOf(address(this)) >= _EGoldAmount,
             "Insufficient EGOLD in Contract."
