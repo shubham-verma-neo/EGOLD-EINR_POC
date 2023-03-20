@@ -12,19 +12,10 @@ function MetaProvider({ children }) {
         async (EINRArtifact, EUSDArtifact, EGOLDArtifact, InventoryArtifact) => {
             if (EINRArtifact && EUSDArtifact && EGOLDArtifact && InventoryArtifact) {
                 const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
-                let accounts;
-                setTimeout(async () => {
+                let accounts = null;
                     if (localStorage.getItem('Address')) {
                         accounts = await web3.eth.requestAccounts();
-                        dispatch({
-                            type: 'login',
-                            data: { accounts }
-                        })
                     }
-                    else {
-                        accounts = null;
-                    }
-                }, 100)
                 const networkID = await web3.eth.net.getId();
                 let { abi } = EINRArtifact;
                 let EINRAddress, EINRContract;

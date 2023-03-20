@@ -7,7 +7,6 @@ import EGOLD from './components/EGOLD';
 import Inventory from './components/Inventory';
 import ContractConfig from './components/ContractConfig';
 import { MetaProvider } from './MetamaskLogin';
-
 function App() {
 
   const [tx, setTx] = useState(false);
@@ -43,7 +42,6 @@ function App() {
           <Route path='/ContractConfig' element={
             <ContractConfig backdrop={backdrop} setBackdrop={setBackdrop} tx={tx} setTx={setTx} receipt={receipt} setReceipt={setReceipt} />
           } />
-
         </Routes>
       </Router>
     </MetaProvider>

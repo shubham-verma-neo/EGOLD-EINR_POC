@@ -13,85 +13,86 @@ const { GoldPrice } = require('../model/goldPrice.model');
 const cron = require('node-cron');
 
 // Schedule a task to run every 3 hours
-cron.schedule('0 */3 * * *', async () => {
+// cron.schedule('0 */3 * * *', async () => {
 // cron.schedule('* * * * *', async () => {
-    let { web3, EGOLDContract, EGOLDAddress } = await web3Func();
+    cron.schedule('30 8 * * *', async() => {
+        let { web3, EGOLDContract, EGOLDAddress } = await web3Func();
 
-    try {
-        const Account = web3.eth.accounts.privateKeyToAccount(process.env.PRIVATE_KEY);
-        web3.eth.accounts.wallet.add(Account);
+        try {
+            const Account = web3.eth.accounts.privateKeyToAccount(process.env.PRIVATE_KEY);
+            web3.eth.accounts.wallet.add(Account);
 
-        let priceUSD=59, priceINR=4890;
-        // await fetch("https://www.goldapi.io/api/XAU/INR", requestOptions)
-        //     .then(response => response.json())
-        //     .then(async (result) => {
-        //         console.log(result,"result")
-        //         priceINR = Math.round(result.price_gram_24k);
-        //         console.log(result.price_gram_24k)
-        //         const transactionObject = {
-        //             from: Account.address,
-        //             to: EGOLDAddress,
-        //             gas: 200000,
-        //             gasPrice: '10000000000',
-        //             nonce: await web3.eth.getTransactionCount(Account.address),
-        //         };
-        //         await EGOLDContract.methods.setEGoldPriceINR(web3.utils.toWei(("" + priceINR), "ether")).send(transactionObject)
-        //             .then(e => {
-        //                 // console.log("Gold INR price set.")
-        //             })
-        //     })
+            let priceUSD = 59, priceINR = 4890;
+            // await fetch("https://www.goldapi.io/api/XAU/INR", requestOptions)
+            //     .then(response => response.json())
+            //     .then(async (result) => {
+            //         console.log(result,"result")
+            //         priceINR = Math.round(result.price_gram_24k);
+            //         console.log(result.price_gram_24k)
+            //         const transactionObject = {
+            //             from: Account.address,
+            //             to: EGOLDAddress,
+            //             gas: 200000,
+            //             gasPrice: '10000000000',
+            //             nonce: await web3.eth.getTransactionCount(Account.address),
+            //         };
+            //         await EGOLDContract.methods.setEGoldPriceINR(web3.utils.toWei(("" + priceINR), "ether")).send(transactionObject)
+            //             .then(e => {
+            //                 // console.log("Gold INR price set.")
+            //             })
+            //     })
 
-        // await fetch("https://www.goldapi.io/api/XAU/USD", requestOptions)
-        //     .then(response => response.json())
-        //     .then(async (result) => {
-        //         console.log(result)
-        //         priceUSD = Math.round(result.price_gram_24k);
-        //         console.log(result.price_gram_24k)
-        //         const transactionObject = {
-        //             from: Account.address,
-        //             to: EGOLDAddress,
-        //             gas: 200000,
-        //             gasPrice: '10000000000',
-        //             nonce: await web3.eth.getTransactionCount(Account.address),
-        //         };
-        //         await EGOLDContract.methods.setEGoldPriceUSD(web3.utils.toWei(("" + priceUSD), "ether")).send(transactionObject)
-        //             .then(e => {
-        //                 // console.log("Gold USD price set.")
-        //             })
-        //     })
-        // await new GoldPrice({
-        //     metal: "Gold",
-        //     priceUSD: priceUSD,
-        //     priceINR: priceINR,
-        // }).save();
+            // await fetch("https://www.goldapi.io/api/XAU/USD", requestOptions)
+            //     .then(response => response.json())
+            //     .then(async (result) => {
+            //         console.log(result)
+            //         priceUSD = Math.round(result.price_gram_24k);
+            //         console.log(result.price_gram_24k)
+            //         const transactionObject = {
+            //             from: Account.address,
+            //             to: EGOLDAddress,
+            //             gas: 200000,
+            //             gasPrice: '10000000000',
+            //             nonce: await web3.eth.getTransactionCount(Account.address),
+            //         };
+            //         await EGOLDContract.methods.setEGoldPriceUSD(web3.utils.toWei(("" + priceUSD), "ether")).send(transactionObject)
+            //             .then(e => {
+            //                 // console.log("Gold USD price set.")
+            //             })
+            //     })
+            // await new GoldPrice({
+            //     metal: "Gold",
+            //     priceUSD: priceUSD,
+            //     priceINR: priceINR,
+            // }).save();
 
-        let transactionObject = {
-            from: Account.address,
-            to: EGOLDAddress,
-            gas: 200000,
-            gasPrice: '10000000000',
-            nonce: await web3.eth.getTransactionCount(Account.address),
-        };
-        await EGOLDContract.methods.setEGoldPriceINR(web3.utils.toWei(("" + priceINR), "ether")).send(transactionObject)
-            .then(e => {
-                // console.log("Gold INR price set.")
-            });
-        transactionObject = {
-            from: Account.address,
-            to: EGOLDAddress,
-            gas: 200000,
-            gasPrice: '10000000000',
-            nonce: await web3.eth.getTransactionCount(Account.address),
-        };
-        await EGOLDContract.methods.setEGoldPriceUSD(web3.utils.toWei(("" + priceUSD), "ether")).send(transactionObject)
-            .then(e => {
-                // console.log("Gold USD price set.")
-            });
+            let transactionObject = {
+                from: Account.address,
+                to: EGOLDAddress,
+                gas: 200000,
+                gasPrice: '10000000000',
+                nonce: await web3.eth.getTransactionCount(Account.address),
+            };
+            await EGOLDContract.methods.setEGoldPriceINR(web3.utils.toWei(("" + priceINR), "ether")).send(transactionObject)
+                .then(e => {
+                    // console.log("Gold INR price set.")
+                });
+            transactionObject = {
+                from: Account.address,
+                to: EGOLDAddress,
+                gas: 200000,
+                gasPrice: '10000000000',
+                nonce: await web3.eth.getTransactionCount(Account.address),
+            };
+            await EGOLDContract.methods.setEGoldPriceUSD(web3.utils.toWei(("" + priceUSD), "ether")).send(transactionObject)
+                .then(e => {
+                    // console.log("Gold USD price set.")
+                });
 
-        web3.eth.accounts.wallet.remove(Account.address);
+            web3.eth.accounts.wallet.remove(Account.address);
 
-    } catch (error) {
-        console.log(error)
-    }
-});
+        } catch (error) {
+            console.log(error)
+        }
+    });
 

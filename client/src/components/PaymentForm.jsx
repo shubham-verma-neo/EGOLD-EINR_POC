@@ -68,7 +68,7 @@ export default function PaymentForm({ _Tx, set_Tx, setReceipt, success, setSucce
                     transactionId: payload.paymentIntent.id,
                     address: account,
                     amount: payload.paymentIntent.amount / 100,
-                    fro: from
+                    from: from
                 })
                 // console.log(response)
 

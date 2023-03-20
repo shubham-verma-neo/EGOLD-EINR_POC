@@ -7,7 +7,8 @@ import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
-import RozarPay from './RozarPay';
+import RazorPay from './RazorPay';
+import GoldPriceChart from './GoldPriceChart';
 
 export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setReceipt }) {
     const { state: { EGOLDContract, accounts } } = useMeta();
@@ -18,9 +19,7 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
     const [myBalance, setMyBalance] = useState("");
 
     const [buy, setBuy] = useState("0");
-    const [totalPrice, setTotalPrice] = useState("0")
     const [_Tx, set_Tx] = useState(false);
-    const [inr, setInr] = useState(false);
     const [success, setSuccess] = useState(false);
     const [RID, setRID] = useState("");
 
@@ -213,7 +212,7 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
         }
     }
     return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "100px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             {backdrop && <Tx backdrop={backdrop} setBackdrop={setBackdrop} tx={tx} setTx={setTx} receipt={receipt} setReceipt={setReceipt} />}
             <div>
                 <h1>Data</h1>
@@ -257,82 +256,90 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
             </div>
 
             <div style={{
+                display: "flex",
+                flexDirection: "row",
                 padding: "1rem",
                 // display: "flex",
-                width: "max-content",
-                gap: "7px"
+                // width: "fit",
+                gap: "10px"
             }}>
                 <div>
-                    <h4>Buy EGOLD</h4>
+                    <div>
+                        <h4>Buy EGOLD</h4>
+                    </div>
+                    <div style={{
+                        padding: "0.5rem",
+                        display: "flex",
+                        justifyContent: "center",
+                        gap: "75px",
+                    }}>
+                        {funcName && <label><h5>{`Total Cost : ${funcName.includes("INR") ? INRperEGOLD * buy : USDperEGOLD * buy} ${funcName}`} </h5></label>}
+                    </div>
+                    <div style={{
+                        padding: "0.5rem",
+                        display: "flex",
+                        gap: "60px"
+                    }}>
+                        <label><h5>Enter EGold Qty.</h5></label>
+                        <input onChange={setBuyHandler} value={buy} type='number' min={1} placeholder='EGOLD Qty.' />
+                    </div>
+                    <div style={{
+                        padding: "0.5rem",
+                        display: "flex",
+                        gap: "25px"
+                    }}>
+                        <label><h5>Payment Method :</h5></label>
+                        <Form>
+                            <div key='inline-radio' className="mb-3">
+                                <Form.Check
+                                    inline
+                                    label={<strong>EINR</strong>}
+                                    name="BuyEGOLD"
+                                    type='radio'
+                                    id='1'
+                                    onChange={() => { setFuncName('EINR') }}
+                                />
+                                <Form.Check
+                                    inline
+                                    label={<strong>INR</strong>}
+                                    name="BuyEGOLD"
+                                    type='radio'
+                                    id='2'
+                                    onChange={() => { setFuncName('INR') }}
+                                />
+                                <Form.Check
+                                    inline
+                                    label={<strong>EUSD</strong>}
+                                    name="BuyEGOLD"
+                                    type='radio'
+                                    id='3'
+                                    onChange={() => { setFuncName('EUSD') }}
+                                />
+                                <Form.Check
+                                    inline
+                                    label={<strong>USD</strong>}
+                                    name="BuyEGOLD"
+                                    type='radio'
+                                    id='4'
+                                    onChange={() => { setFuncName('USD') }}
+                                />
+                            </div>
+                        </Form>
+                    </div>
+                    <div className="d-grid gap-2">
+                        <Button variant="primary" size="sz" onClick={() => { buyGOLD(funcName) }}>
+                            Buy
+                        </Button>
+                    </div>
                 </div>
-                <div style={{
-                    padding: "0.5rem",
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: "75px",
-                }}>
-                    {funcName && <label><h5>{`Total Cost : ${funcName.includes("INR") ? INRperEGOLD * buy : USDperEGOLD * buy} ${funcName}`} </h5></label>}
-                </div>
-                <div style={{
-                    padding: "0.5rem",
-                    display: "flex",
-                    gap: "60px"
-                }}>
-                    <label><h5>Enter EGold Qty.</h5></label>
-                    <input onChange={setBuyHandler} value={buy} type='number' min={1} placeholder='EGOLD Qty.' />
-                </div>
-                <div style={{
-                    padding: "0.5rem",
-                    display: "flex",
-                    gap: "25px"
-                }}>
-                    <label><h5>Payment Method :</h5></label>
-                    <Form>
-                        <div key='inline-radio' className="mb-3">
-                            <Form.Check
-                                inline
-                                label={<strong>EINR</strong>}
-                                name="BuyEGOLD"
-                                type='radio'
-                                id='1'
-                                onChange={() => { setFuncName('EINR') }}
-                            />
-                            <Form.Check
-                                inline
-                                label={<strong>INR</strong>}
-                                name="BuyEGOLD"
-                                type='radio'
-                                id='2'
-                                onChange={() => { setFuncName('INR') }}
-                            />
-                            <Form.Check
-                                inline
-                                label={<strong>EUSD</strong>}
-                                name="BuyEGOLD"
-                                type='radio'
-                                id='3'
-                                onChange={() => { setFuncName('EUSD') }}
-                            />
-                            <Form.Check
-                                inline
-                                label={<strong>USD</strong>}
-                                name="BuyEGOLD"
-                                type='radio'
-                                id='4'
-                                onChange={() => { setFuncName('USD') }}
-                            />
-                        </div>
-                    </Form>
-                </div>
-                <div className="d-grid gap-2">
-                    <Button variant="primary" size="sz" onClick={() => { buyGOLD(funcName) }}>
-                        Buy
-                    </Button>
+                <div style={{width: "60%"}}>
+                <GoldPriceChart />
+
                 </div>
             </div>
 
             {funcName && funcName.includes("INR") ?
-                (_Tx && <RozarPay
+                (_Tx && <RazorPay
                     _Tx={_Tx}
                     set_Tx={set_Tx}
                     setReceipt={setReceipt}

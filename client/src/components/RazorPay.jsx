@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import axios from "axios"
 
-export default function RozarPay({ set_Tx, setReceipt, success, setSuccess, setRID, totalPrice, account, from, to }) {
+export default function RazorPay({ set_Tx, setReceipt, success, setSuccess, setRID, totalPrice, account, from, to }) {
     const [payBackdrop, setPayBackdrop] = useState(false);
     const [shippingDetails, setShippingDetails] = useState({
         name: "",

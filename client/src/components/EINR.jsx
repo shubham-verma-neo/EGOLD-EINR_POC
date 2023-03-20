@@ -5,7 +5,7 @@ import Tx from './Tx';
 import Button from 'react-bootstrap/Button';
 import useMeta from '../MetamaskLogin/useMeta';
 import StripePayment from './StripePayment';
-import RozarPay from './RozarPay';
+import RazorPay from './RazorPay';
 
 export default function EINR({ backdrop, setBackdrop, tx, setTx, receipt, setReceipt }) {
     const { state: { EINRContract, EINRAddress, accounts, web3 } } = useMeta();
@@ -105,7 +105,7 @@ export default function EINR({ backdrop, setBackdrop, tx, setTx, receipt, setRec
                 from='INR'
                 to='EINR'
             />} */}
-            {_Tx && <RozarPay
+            {_Tx && <RazorPay
                 _Tx={_Tx}
                 set_Tx={set_Tx}
                 setReceipt={setReceipt}

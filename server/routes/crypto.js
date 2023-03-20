@@ -124,7 +124,7 @@ router.post("/EINR", cors(), async (req, res) => {
         })
 
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         res.status(400).json({
             message: "Minting Failed",
             status: false,
@@ -195,7 +195,7 @@ router.post("/EGOLD", cors(), async (req, res) => {
             receipt: receipt
         })
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         res.status(400).json({
             message: "EGOLD transferred failed.",
             status: false,
@@ -205,5 +205,6 @@ router.post("/EGOLD", cors(), async (req, res) => {
 
 
 })
+
 
 module.exports = router;
