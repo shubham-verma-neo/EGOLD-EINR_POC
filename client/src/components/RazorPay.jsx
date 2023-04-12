@@ -37,7 +37,7 @@ export default function RazorPay({ set_Tx, setReceipt, success, setSuccess, setR
         setPayBackdrop(true);
         try {
 
-            let response = await axios.post('http://localhost:4000/payments/razorPay', {
+            let response = await axios.post('http://localhost:4005/payments/razorPay', {
                 address: account,
                 amount: totalPrice,
                 from: from,
@@ -55,7 +55,7 @@ export default function RazorPay({ set_Tx, setReceipt, success, setSuccess, setR
                 order_id: data.order.id,
                 handler: async function (response) {
                     // console.log(response);
-                    response = await axios.post(`http://localhost:4000/crypto/${to}`, {
+                    response = await axios.post(`http://localhost:4005/crypto/${to}`, {
                         transactionId: response.razorpay_payment_id,
                         address: account,
                         from: from,

@@ -8,7 +8,7 @@ function GoldPriceChart() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await axios.get('http://localhost:4000/goldPrice/get');
+            const response = await axios.get('http://localhost:4005/goldPrice/get');
             setData([...response.data]);
         };
         fetchData();

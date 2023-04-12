@@ -37,7 +37,7 @@ export default function EINR({ backdrop, setBackdrop, tx, setTx, receipt, setRec
             setTimeout(async () => {
                 getDataHandler();
                 setSuccess(false);
-            }, 4000)
+            }, 4005)
         }
     }, [success])
 
