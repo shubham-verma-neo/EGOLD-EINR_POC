@@ -11,5 +11,5 @@ require('./routes/cron');
 
 
 app.listen(process.env.PORT || 4005, () => {
-    console.log("Sever is listening on port 4005")
+    console.log(`Sever is listening on port ${(process.env.PORT || 4005)}`)
 })

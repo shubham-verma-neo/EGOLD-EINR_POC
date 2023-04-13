@@ -5,10 +5,9 @@ import ApexCharts from 'apexcharts';
 function GoldPriceChart() {
     const [data, setData] = useState([]);
     const [currency, setCurrency] = useState('priceUSD');
-
     useEffect(() => {
         const fetchData = async () => {
-            const response = await axios.get('http://localhost:4005/goldPrice/get');
+            const response = await axios.get(`${process.env.REACT_APP_SERVER}/goldPrice/get`);
             setData([...response.data]);
         };
         fetchData();

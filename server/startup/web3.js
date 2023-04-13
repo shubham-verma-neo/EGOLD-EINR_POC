@@ -64,35 +64,4 @@ const web3Func = async () => {
     }
 }
 
-
-const web3elements = async (req, res, next) => {
-
-    // const { web3, networkID,
-    //     EINRAddress, EINRContract,
-    //     EUSDAddress, EUSDContract,
-    //     EGOLDAddress, EGOLDContract,
-    //     InventoryAddress, InventoryContract } =
-    await web3Func().then(obj => {
-        let { EUSDAddress } = obj;
-        req.EUSDAddress = EUSDAddress
-    }
-            
-        );
-// console.log(EINRAddress)
-    req.axd = 3;
-   
-    // req.networkID = networkID;
-    // req.EINRAddress = EINRAddress;
-    // req.EINRContract = EINRContract;
-    // req.EUSDAddress = EUSDAddress;
-    // req.EUSDContract = EUSDContract;
-    // req.EGOLDAddress = EGOLDAddress;
-    // req.EGOLDContract = EGOLDContract;
-    // req.InventoryAddress = InventoryAddress;
-    // req.InventoryContract = InventoryContract;
-
-    // Call the next middleware function
-    next();
-}
-
-module.exports = {web3elements, web3Func};
+module.exports = {web3Func};

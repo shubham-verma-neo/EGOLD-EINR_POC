@@ -93,8 +93,6 @@ export default function StripePayment({ set_Tx, setReceipt, success, setSuccess,
                                     onChange={handleShippingChange}
                                 > <option value="">Select Country</option>
                                     <option value="US">United States</option>
-                                    <option value="IN">India</option>
-                                    <option value="Mexico">Mexico</option>
                                 </Form.Select></Form.Group>
                             <Button style={{ margin: '0.5rem' }} variant="primary" onClick={() => setShippingBool(true)}>Next</Button>
                             <Button style={{ margin: '0.5em' }} variant="primary" onClick={() => { set_Tx(false); }}>Close</Button>
