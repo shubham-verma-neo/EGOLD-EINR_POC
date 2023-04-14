@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract EUSDContract is Ownable, ERC20 {
-    event Minted(address indexed _owner, address indexed _to, uint256 _amount);
+    event Minted(address indexed _owner, address indexed _to, uint256 indexed _amount);
     event EGOLDAddressSet(address indexed _setBy, address indexed _EGOLDAdd);
     event TransferEUSDtoEGOLD(
         address indexed _from,

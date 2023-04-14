@@ -6,10 +6,10 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./EGOLD.sol";
 
 contract Inventory is Ownable{
-    event EGOLDAddressSet(address _EGOLDAddress);
+    event EGOLDAddressSet(address indexed _EGOLDAddress);
     event eGOLDRatio(uint256 _eGOLDTokens);
-    event InventoryAdded(address _addBy, uint256 _amount);
-    event InventoryRemoved(address _removeBy, uint256 _amount);
+    event InventoryAdded(address indexed _addBy, uint256 indexed _amount);
+    event InventoryRemoved(address indexed _removeBy, uint256 indexed _amount);
 
     address public admin;
     EGOLDContract public EGOLDAdd;
@@ -30,11 +30,6 @@ contract Inventory is Ownable{
         EGOLDAdd = EGOLDContract(_EGOLDAddress);
         emit EGOLDAddressSet(_EGOLDAddress);
     }
-
-    // function setRatio(uint256 _eGOLD)public onlyAdmin{
-    //     eGOLDratio = _eGOLD;
-    //     emit eGOLDRatio(_eGOLD);
-    // }
 
     function addInventory(uint256 _amount) public onlyAdmin {
         require(address(EGOLDAdd) != address(0), "EGOLD address not set.");

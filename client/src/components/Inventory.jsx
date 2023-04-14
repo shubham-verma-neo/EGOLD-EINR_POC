@@ -45,7 +45,10 @@ export default function Inventory({ backdrop, setBackdrop, tx, setTx, receipt, s
 
 
     const setInventoryHandler = (e) => {
+        const regex = /^[0-9]*$/; // regular expression to allow only whole numbers
+        if (regex.test(e.target.value)) {
         set_Inventory(e.target.value);
+        }
     }
 
     const addInventory = async () => {

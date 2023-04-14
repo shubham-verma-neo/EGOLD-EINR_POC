@@ -73,7 +73,7 @@ contract EGOLDContract is Ownable, ERC20 {
 
     function mint(uint256 _amount) public onlyInventoryHandler {
         _mint(address(this), _amount);
-        availableSupply = totalSupply();
+        availableSupply = balanceOf(address(this));
         emit Minted(address(this), _amount);
     }
 
@@ -83,7 +83,7 @@ contract EGOLDContract is Ownable, ERC20 {
             "Insufficient EGOLD in Contract."
         );
         _burn(address(this), _amount);
-        availableSupply = totalSupply();
+        availableSupply = balanceOf(address(this));
         emit Burned(address(this), _amount);
     }
 

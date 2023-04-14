@@ -16,7 +16,9 @@ const web3Func = async () => {
         InventoryAddress, InventoryContract;
 
     try {
-        web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
+        // web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
+        web3 = new Web3("https://rpc-mumbai.maticvigil.com");
+        
         networkID = await web3.eth.net.getId();
         if (EINRArtifact && EUSDArtifact && EGOLDArtifact && InventoryArtifact) {
             let { abi } = EINRArtifact;

@@ -52,7 +52,11 @@ export default function EINR({ backdrop, setBackdrop, tx, setTx, receipt, setRec
     }
 
     const setMintHandler = (e) => {
-        setMint(e.target.value);
+        const regex = /^[0-9]*$/; // regular expression to allow only whole numbers
+        if (regex.test(e.target.value)) {
+            setMint(e.target.value);
+        }
+
     }
 
     const mintEINR = async () => {
@@ -86,7 +90,7 @@ export default function EINR({ backdrop, setBackdrop, tx, setTx, receipt, setRec
                 gap: "7px"
             }}>
                 <label><h5>EINR</h5></label>
-                <input onChange={setMintHandler} value={mint} type='number' min={1} placeholder='Enter EINR Amount' />
+                <input onChange={setMintHandler} value={mint} type='number' min={1} step={1} placeholder='Enter EINR Amount' />
                 <Button onClick={mintEINR} variant="primary" size="sz" >
                     Mint
                 </Button>

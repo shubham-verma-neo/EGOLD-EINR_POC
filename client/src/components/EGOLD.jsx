@@ -77,7 +77,10 @@ export default function EGOLD({ backdrop, setBackdrop, tx, setTx, receipt, setRe
     }
 
     const setBuyHandler = (e) => {
-        setBuy(e.target.value);
+        const regex = /^[0-9]*$/; // regular expression to allow only whole numbers
+        if (regex.test(e.target.value)) {
+            setBuy(e.target.value);
+        }
     }
 
     const __EINR = async () => {

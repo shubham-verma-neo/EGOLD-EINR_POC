@@ -59,7 +59,10 @@ export default function EUSD({ backdrop, setBackdrop, tx, setTx, receipt, setRec
     }
 
     const setMintHandler = (e) => {
-        setMint(e.target.value);
+        const regex = /^[0-9]*$/; // regular expression to allow only whole numbers
+        if (regex.test(e.target.value)) {
+            setMint(e.target.value);
+        }
     }
 
     const mintEUSD = async () => {
