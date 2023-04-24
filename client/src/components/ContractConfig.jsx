@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import useMeta from '../MetamaskLogin/useMeta';
 
 export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, receipt, setReceipt }) {
-    const { state: { EINRContract, EUSDContract, EGOLDContract, InventoryContract, accounts, EINRAddress, EUSDAddress, EGOLDAddress, InventoryAddress } } = useMeta();
+    const { state: { OwnableContract, EINRContract, EUSDContract, EGOLDContract, InventoryContract, accounts, OwnableAddress, EINRAddress, EUSDAddress, EGOLDAddress, InventoryAddress } } = useMeta();
 
     const [EINR_EGOLDAdd, setEINR_EGOLDAdd] = useState(null);
     const [EUSD_EGOLDAdd, setEUSD_EGOLDAdd] = useState(null);
@@ -14,6 +14,12 @@ export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, recei
     const [addEGOLD_EINR, setAddEGOLD_EINR] = useState("");
     const [InventoryAdd, setInventoryAdd] = useState("");
     const [EGOLdAddress, setEGOLdAddress] = useState("");
+    const [OwnableOwner, setOwnableOwner] = useState("");
+    const [OwnableNewAdminAdd, setOwnableNewAdminAdd] = useState("");
+    const [addEINR_Ownable, setAddEINR_Ownable] = useState("");
+    const [addEUSD_Ownable, setAddEUSD_Ownable] = useState("");
+    const [addEGOLD_Ownable, setAddEGOLD_Ownable] = useState("");
+    const [addInventory_Ownable, setAddInventory_Ownable] = useState("");
 
     const [EGOLD_EINRAdd, setEGOLD_EINRAdd] = useState(null);
     const [EGOLD_EUSDAdd, setEGOLD_EUSDAdd] = useState(null);
@@ -21,6 +27,10 @@ export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, recei
     const [addEUSD, setAddEUSD] = useState("");
     const [_InventoryAdd, set_InventoryAdd] = useState("");
     const [_EGOLDAddress, set_EGOLDAddress] = useState("");
+    const [EINR_Ownable, set_EINR_Ownable] = useState("");
+    const [EUSD_Ownable, set_EUSD_Ownable] = useState("");
+    const [EGOLD_Ownable, set_EGOLD_Ownable] = useState("");
+    const [Inventory_Ownable, set_Inventory_Ownable] = useState("");
 
     useEffect(() => {
         if (accounts) {
@@ -28,6 +38,7 @@ export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, recei
                 getDataHandler();
             }, 100)
         } else {
+            setOwnableOwner('--');
             setEINR_EGOLDAdd('--');
             setEUSD_EGOLDAdd('--');
             setEGOLD_EINRAdd('--');
@@ -39,16 +50,34 @@ export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, recei
     }, [accounts])
 
     const getDataHandler = async () => {
+        await OwnableContract.methods.owner().call({ from: accounts[0] })
+            .then(e => {
+                // console.log(e);
+                setOwnableOwner(e);
+            })
+            .catch(err => console.log(err));
         await EINRContract.methods.EGOLD().call({ from: accounts[0] })
             .then(e => {
                 //console.log(e);
                 setEINR_EGOLDAdd(e);
             })
             .catch(err => console.log(err));
+        await EINRContract.methods.ownable().call({ from: accounts[0] })
+            .then(e => {
+                //console.log(e);
+                set_EINR_Ownable(e);
+            })
+            .catch(err => console.log(err));
         await EUSDContract.methods.EGOLD().call({ from: accounts[0] })
             .then(e => {
                 //console.log(e);
                 setEUSD_EGOLDAdd(e);
+            })
+            .catch(err => console.log(err));
+        await EUSDContract.methods.ownable().call({ from: accounts[0] })
+            .then(e => {
+                //console.log(e);
+                set_EUSD_Ownable(e);
             })
             .catch(err => console.log(err));
         await EGOLDContract.methods._EINR().call({ from: accounts[0] })
@@ -68,12 +97,176 @@ export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, recei
                 setInventoryAdd(e);
             })
             .catch(err => console.log(err));
+        await EGOLDContract.methods.ownable().call({ from: accounts[0] })
+            .then(e => {
+                //console.log(e);
+                set_EGOLD_Ownable(e);
+            })
+            .catch(err => console.log(err));
         await InventoryContract.methods.EGOLDAdd().call({ from: accounts[0] })
             .then(e => {
                 //console.log(e);
                 setEGOLdAddress(e);
             })
             .catch(err => console.log(err));
+        await InventoryContract.methods.ownable().call({ from: accounts[0] })
+            .then(e => {
+                //console.log(e);
+                set_Inventory_Ownable(e);
+            })
+            .catch(err => console.log(err));
+    }
+
+    const setOwnableNewAdminHandler = (e) => {
+        setOwnableNewAdminAdd(e.target.value);
+    }
+    const setOwnableAddNewAdmin = async () => {
+        if (!accounts) {
+            alert("Please Connect Wallet.");
+            return;
+        }
+        setBackdrop(true);
+        await OwnableContract.methods.addWhitelistedAdmin(OwnableNewAdminAdd)
+            .send({
+                from: accounts[0]
+            })
+            .then(e => {
+                //console.log(e);
+                setReceipt(e)
+                setTx(true);
+            })
+            .catch(err => {
+                setBackdrop(false);
+                console.log(err)
+            });
+        getDataHandler();
+        setOwnableNewAdminAdd("");
+    }
+    const setOwnableRemoveNewAdmin = async () => {
+        if (!accounts) {
+            alert("Please Connect Wallet.");
+            return;
+        }
+        setBackdrop(true);
+        await OwnableContract.methods.removeWhitelistedAdmin(OwnableNewAdminAdd)
+            .send({
+                from: accounts[0]
+            })
+            .then(e => {
+                //console.log(e);
+                setReceipt(e)
+                setTx(true);
+            })
+            .catch(err => {
+                setBackdrop(false);
+                console.log(err)
+            });
+        getDataHandler();
+        setOwnableNewAdminAdd("");
+    }
+
+    const setAddEINR_OwnableHandler = (e) => {
+        setAddEINR_Ownable(e.target.value);
+    }
+    const setEINR_Ownable = async () => {
+        if (!accounts) {
+            alert("Please Connect Wallet.");
+            return;
+        }
+        setBackdrop(true);
+        await EINRContract.methods.setOwnable(addEINR_Ownable)
+            .send({
+                from: accounts[0]
+            })
+            .then(e => {
+                console.log(e);
+                setReceipt(e)
+                setTx(true);
+            })
+            .catch(err => {
+                setBackdrop(false);
+                console.log(err)
+            });
+        getDataHandler();
+        setAddEINR_Ownable("");
+    }
+
+    const setAddEUSD_OwnableHandler = (e) => {
+        setAddEUSD_Ownable(e.target.value);
+    }
+    const setEUSD_Ownable = async () => {
+        if (!accounts) {
+            alert("Please Connect Wallet.");
+            return;
+        }
+        setBackdrop(true);
+        await EUSDContract.methods.setOwnable(addEUSD_Ownable)
+            .send({
+                from: accounts[0]
+            })
+            .then(e => {
+                console.log(e);
+                setReceipt(e)
+                setTx(true);
+            })
+            .catch(err => {
+                setBackdrop(false);
+                console.log(err)
+            });
+        getDataHandler();
+        setAddEUSD_Ownable("");
+    }
+
+    const setAddEGOLD_OwnableHandler = (e) => {
+        setAddEGOLD_Ownable(e.target.value);
+    }
+    const setEGOLD_Ownable = async () => {
+        if (!accounts) {
+            alert("Please Connect Wallet.");
+            return;
+        }
+        setBackdrop(true);
+        await EGOLDContract.methods.setOwnable(addEGOLD_Ownable)
+            .send({
+                from: accounts[0]
+            })
+            .then(e => {
+                //console.log(e);
+                setReceipt(e)
+                setTx(true);
+            })
+            .catch(err => {
+                setBackdrop(false);
+                console.log(err)
+            });
+        getDataHandler();
+        setAddEGOLD_Ownable("");
+    }
+
+    const setAddInventory_OwnableHandler = (e) => {
+        setAddInventory_Ownable(e.target.value);
+    }
+    const setInventory_Ownable = async () => {
+        if (!accounts) {
+            alert("Please Connect Wallet.");
+            return;
+        }
+        setBackdrop(true);
+        await InventoryContract.methods.setOwnable(addInventory_Ownable)
+            .send({
+                from: accounts[0]
+            })
+            .then(e => {
+                //console.log(e);
+                setReceipt(e)
+                setTx(true);
+            })
+            .catch(err => {
+                setBackdrop(false);
+                console.log(err)
+            });
+        getDataHandler();
+        setAddInventory_Ownable("");
     }
 
     const setEGOLDHandlerEINR = (e) => {
@@ -169,7 +362,7 @@ export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, recei
                 from: accounts[0]
             })
             .then(e => {
-                //console.log(e);
+                console.log(e);
                 setReceipt(e)
                 setTx(true);
             })
@@ -248,6 +441,50 @@ export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, recei
         <div>
             {backdrop && <Tx backdrop={backdrop} setBackdrop={setBackdrop} tx={tx} setTx={setTx} receipt={receipt} setReceipt={setReceipt} />}
             <div>
+                <h1>Ownable Config</h1>
+                <Table striped bordered hover >
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Ownable Contract</td>
+                            <td>{OwnableAddress && <Link onClick={() => window.open(`https://mumbai.polygonscan.com/token/${OwnableAddress}`)}>{OwnableAddress}</Link>}</td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                            <td>2</td>
+                            <td>Owner Address</td>
+                            <td>{OwnableOwner && OwnableOwner}</td>
+                        </tr>
+                    </tbody>
+                </Table>
+
+                <div style={{
+                    padding: "1rem",
+                    display: "flex",
+                    gap: "7px",
+                    alignItems: "baseline"
+
+                }}>
+                    <label><h5>Admin Add/Remove</h5></label>
+                    <input onChange={setOwnableNewAdminHandler} value={OwnableNewAdminAdd} placeholder='Admin Address' />
+                    <Button onClick={setOwnableAddNewAdmin} variant="primary" size="sz" >
+                        Add Admin
+                    </Button>
+                    <Button onClick={setOwnableRemoveNewAdmin} variant="primary" size="sz" >
+                        Remove Admin
+                    </Button>
+
+                </div>
+            </div>
+            <div>
                 <h1>EINR Config</h1>
                 <Table striped bordered hover >
                     <thead>
@@ -271,13 +508,26 @@ export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, recei
                             <td>{EINR_EGOLDAdd && EINR_EGOLDAdd}</td>
                         </tr>
                     </tbody>
+                    <tbody>
+                        <tr>
+                            <td>3</td>
+                            <td>Ownable</td>
+                            <td>{EINR_Ownable && EINR_Ownable}</td>
+                        </tr>
+                    </tbody>
                 </Table>
 
                 <div style={{
                     padding: "1rem",
                     display: "flex",
-                    gap: "7px"
+                    gap: "7px",
+                    alignItems: "baseline"
                 }}>
+                    <label><h5>Ownable Add</h5></label>
+                    <input onChange={setAddEINR_OwnableHandler} value={addEINR_Ownable} placeholder='Ownable Address' />
+                    <Button onClick={setEINR_Ownable} variant="primary" size="sz" >
+                        Set
+                    </Button>
                     <label><h5>EGOLD Add</h5></label>
                     <input onChange={setEGOLDHandlerEINR} value={addEGOLD_EINR} placeholder='EGOLD Address' />
                     <Button onClick={setEGOLDEINR} variant="primary" size="sz" >
@@ -310,13 +560,26 @@ export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, recei
                             <td>{EUSD_EGOLDAdd && EUSD_EGOLDAdd}</td>
                         </tr>
                     </tbody>
+                    <tbody>
+                        <tr>
+                            <td>3</td>
+                            <td>Ownable</td>
+                            <td>{EUSD_Ownable && EUSD_Ownable}</td>
+                        </tr>
+                    </tbody>
                 </Table>
 
                 <div style={{
                     padding: "1rem",
                     display: "flex",
-                    gap: "7px"
+                    gap: "7px",
+                    alignItems: "baseline"
                 }}>
+                    <label><h5>Ownable Add</h5></label>
+                    <input onChange={setAddEUSD_OwnableHandler} value={addEUSD_Ownable} placeholder='Ownable Address' />
+                    <Button onClick={setEUSD_Ownable} variant="primary" size="sz" >
+                        Set
+                    </Button>
                     <label><h5>EGOLD Add</h5></label>
                     <input onChange={setEGOLDHandlerEUSD} value={addEGOLD_EUSD} placeholder='EGOLD Address' />
                     <Button onClick={setEGOLDEUSD} variant="primary" size="sz" >
@@ -349,14 +612,27 @@ export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, recei
                             <td>{EGOLdAddress && EGOLdAddress}</td>
                         </tr>
                     </tbody>
+                    <tbody>
+                        <tr>
+                            <td>3</td>
+                            <td>Ownable</td>
+                            <td>{Inventory_Ownable && Inventory_Ownable}</td>
+                        </tr>
+                    </tbody>
                 </Table>
 
                 <div style={{
                     padding: "1rem",
                     display: "flex",
                     gap: "7px",
-                    justifyItems: "center"
+                    // justifyItems: "center",
+                    alignItems: "baseline"
                 }}>
+                    <label><h5>Ownable Add</h5></label>
+                    <input onChange={setAddInventory_OwnableHandler} value={addInventory_Ownable} placeholder='Ownable Address' />
+                    <Button onClick={setInventory_Ownable} variant="primary" size="sz" >
+                        Set
+                    </Button>
                     <label><h5>EGOLD Add</h5></label>
                     <input onChange={setEGOLDAddHandler} value={_EGOLDAddress} placeholder='EGOLD Address' />
                     <Button onClick={EGOLDAdd} variant="primary" size="sz" >
@@ -402,18 +678,39 @@ export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, recei
                             <td>{InventoryAdd && InventoryAdd}</td>
                         </tr>
                     </tbody>
+                    <tbody>
+                        <tr>
+                            <td>3</td>
+                            <td>Ownable</td>
+                            <td>{EGOLD_Ownable && EGOLD_Ownable}</td>
+                        </tr>
+                    </tbody>
                 </Table>
 
                 <div style={{
                     padding: "1rem",
                     display: "flex",
-                    gap: "10px"
+                    gap: "10px",
+                    alignItems: "baseline",
                 }}>
+                    <label><h5>Ownable Add</h5></label>
+                    <input onChange={setAddEGOLD_OwnableHandler} value={addEGOLD_Ownable} placeholder='Ownable Address' />
+                    <Button onClick={setEGOLD_Ownable} variant="primary" size="sz" >
+                        Set
+                    </Button>
                     <label><h5>EINR Add</h5></label>
                     <input onChange={setEINRHandler} value={addEINR} placeholder='EINR Address' />
                     <Button onClick={setEINR} variant="primary" size="sz" >
                         Set
                     </Button>
+
+                </div>
+                <div style={{
+                    padding: "1rem",
+                    display: "flex",
+                    gap: "10px",
+                    alignItems: "baseline",
+                }}>
                     <label><h5>EUSD Add</h5></label>
                     <input onChange={setEUSDHandler} value={addEUSD} placeholder='EUSD Address' />
                     <Button onClick={setEUSD} variant="primary" size="sz" >

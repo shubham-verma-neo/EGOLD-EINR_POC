@@ -9,15 +9,24 @@ function MetaProvider({ children }) {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const init = useCallback(
-        async (EINRArtifact, EUSDArtifact, EGOLDArtifact, InventoryArtifact) => {
-            if (EINRArtifact && EUSDArtifact && EGOLDArtifact && InventoryArtifact) {
+        async (OwnableArtifact, EINRArtifact, EUSDArtifact, EGOLDArtifact, InventoryArtifact) => {
+            if (OwnableArtifact && EINRArtifact && EUSDArtifact && EGOLDArtifact && InventoryArtifact) {
                 const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
                 let accounts = null;
                     if (localStorage.getItem('Address')) {
                         accounts = await web3.eth.requestAccounts();
                     }
                 const networkID = await web3.eth.net.getId();
-                let { abi } = EINRArtifact;
+                let { abi } = OwnableArtifact;
+                let OwnableAddress, OwnableContract;
+                    try {
+                    OwnableAddress = OwnableArtifact.networks[networkID].address;
+                    OwnableContract = new web3.eth.Contract(abi, OwnableAddress);
+                } catch (error) {
+                    console.log(error);
+                }
+
+                ({ abi } = EINRArtifact);
                 let EINRAddress, EINRContract;
                 try {
                     EINRAddress = EINRArtifact.networks[networkID].address;
@@ -56,9 +65,9 @@ function MetaProvider({ children }) {
                 dispatch({
                     type: 'init',
                     data: {
-                        EINRArtifact, EUSDArtifact, EGOLDArtifact, InventoryArtifact,
-                        EINRContract, EUSDContract, EGOLDContract, InventoryContract,
-                        EINRAddress, EUSDAddress, EGOLDAddress, InventoryAddress,
+                        OwnableArtifact, EINRArtifact, EUSDArtifact, EGOLDArtifact, InventoryArtifact,
+                        OwnableContract, EINRContract, EUSDContract, EGOLDContract, InventoryContract,
+                        OwnableAddress, EINRAddress, EUSDAddress, EGOLDAddress, InventoryAddress,
                         web3, networkID, accounts
                     }
                 })
@@ -69,11 +78,12 @@ function MetaProvider({ children }) {
     useEffect(() => {
         const tryInit = async () => {
             try {
+                const OwnableArtifact = require('../contracts/OwnableContract.json');
                 const EINRArtifact = require('../contracts/EINRContract.json');
                 const EUSDArtifact = require('../contracts/EUSDContract.json');
                 const EGOLDArtifact = require('../contracts/EGOLDContract.json');
                 const InventoryArtifact = require('../contracts/Inventory.json');
-                init(EINRArtifact, EUSDArtifact, EGOLDArtifact, InventoryArtifact);
+                init(OwnableArtifact, EINRArtifact, EUSDArtifact, EGOLDArtifact, InventoryArtifact);
             } catch (error) {
                 console.log(error);
             }
@@ -84,7 +94,7 @@ function MetaProvider({ children }) {
     useEffect(() => {
         const events = ["chainChanged", "accountsChanged"];
         const handleChange = () => {
-            init(state.EINRArtifact, state.EUSDArtifact, state.EGOLDArtifact, state.InventoryArtifact);
+            init(state.OwnableArtifact ,state.EINRArtifact, state.EUSDArtifact, state.EGOLDArtifact, state.InventoryArtifact);
             const accounts = null;
             localStorage.removeItem('Address');
             dispatch({
@@ -97,7 +107,7 @@ function MetaProvider({ children }) {
         return () => {
             events.forEach(e => window.ethereum.removeListener(e, handleChange));
         };
-    }, [init, state.EINRArtifact, state.EUSDArtifact, state.EGOLDArtifact, state.InventoryArtifact]);
+    }, [init, state.OwnableArtifact ,state.EINRArtifact, state.EUSDArtifact, state.EGOLDArtifact, state.InventoryArtifact]);
 
     const logIn = async () => {
         try {

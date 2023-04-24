@@ -48,14 +48,6 @@ export default function EUSD({ backdrop, setBackdrop, tx, setTx, receipt, setRec
                 // setMyBalance(e);
             })
             .catch(err => console.log(err));
-
-        await EUSDContract.methods.owner().call({ from: accounts[0] })
-            .then(e => {
-                // console.log(e, "owner");
-                // setMyBalance(Web3.utils.fromWei(e, "ether"));
-                // setMyBalance(e);
-            })
-            .catch(err => console.log(err));
     }
 
     const setMintHandler = (e) => {

@@ -31,9 +31,9 @@ cron.schedule('0 0 * * *', async () => {
         await fetch("https://www.goldapi.io/api/XAU/INR", requestOptions)
             .then(response => response.json())
             .then(async (result) => {
-                console.log(result, "result")
+                // console.log(result, "result")
                 priceINR = Math.round(result.price_gram_24k);
-                console.log(result.price_gram_24k)
+                // console.log(result.price_gram_24k)
                 const transactionObject = {
                     from: Account.address,
                     to: EGOLDAddress,
@@ -43,16 +43,16 @@ cron.schedule('0 0 * * *', async () => {
                 };
                 await EGOLDContract.methods.setEGoldPriceINR(web3.utils.toWei(("" + priceINR), "ether")).send(transactionObject)
                     .then(e => {
-                        // console.log("Gold INR price set.")
+                        console.log("Gold INR price set = ",priceINR)
                     })
             })
 
         await fetch("https://www.goldapi.io/api/XAU/USD", requestOptions)
             .then(response => response.json())
             .then(async (result) => {
-                console.log(result)
+                // console.log(result)
                 priceUSD = Math.round(result.price_gram_24k);
-                console.log(result.price_gram_24k)
+                // console.log(result.price_gram_24k)
                 const transactionObject = {
                     from: Account.address,
                     to: EGOLDAddress,
@@ -62,7 +62,7 @@ cron.schedule('0 0 * * *', async () => {
                 };
                 await EGOLDContract.methods.setEGoldPriceUSD(web3.utils.toWei(("" + priceUSD), "ether")).send(transactionObject)
                     .then(e => {
-                        // console.log("Gold USD price set.")
+                        console.log("Gold USD price set = ",priceUSD)
                     })
             })
         await new GoldPrice({

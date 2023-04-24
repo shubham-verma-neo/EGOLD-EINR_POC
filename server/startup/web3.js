@@ -16,8 +16,9 @@ const web3Func = async () => {
         InventoryAddress, InventoryContract;
 
     try {
+        web3 = new Web3(`${process.env.MONGODB == "EGOLD" ? process.env.GIVEN_PROVIDER_SERVER : process.env.GIVEN_PROVIDER_LOCALHOST}`);
         // web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
-        web3 = new Web3("https://rpc-mumbai.maticvigil.com");
+        // web3 = new Web3("https://rpc-mumbai.maticvigil.com");
         
         networkID = await web3.eth.net.getId();
         if (EINRArtifact && EUSDArtifact && EGOLDArtifact && InventoryArtifact) {

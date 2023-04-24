@@ -1,7 +1,7 @@
 const initialState = {
-    EINRArtifact: null, EUSDArtifact: null, EGOLDArtifact: null, InventoryArtifact: null,
-    EINRContract: null, EUSDContract: null, EGOLDContract: null, InventoryContract: null,
-    EINRAddress: null, EUSDAddress: null, EGOLDAddress: null, InventoryAddress: null,
+    OwnableArtifact: null, EINRArtifact: null, EUSDArtifact: null, EGOLDArtifact: null, InventoryArtifact: null,
+    OwnableContract: null, EINRContract: null, EUSDContract: null, EGOLDContract: null, InventoryContract: null,
+    OwnableAddress: null, EINRAddress: null, EUSDAddress: null, EGOLDAddress: null, InventoryAddress: null,
     web3: null, networkID: null, accounts: null
 };
 
