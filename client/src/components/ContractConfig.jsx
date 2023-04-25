@@ -45,6 +45,11 @@ export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, recei
             setEGOLD_EUSDAdd('--');
             setInventoryAdd('--');
             setEGOLdAddress('--');
+            setOwnableOwner('--');
+            set_EINR_Ownable('--');
+            set_EUSD_Ownable('--');
+            set_EGOLD_Ownable('--');
+            set_Inventory_Ownable('--');
         }
 
     }, [accounts])
@@ -179,7 +184,7 @@ export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, recei
                 from: accounts[0]
             })
             .then(e => {
-                console.log(e);
+                // console.log(e);
                 setReceipt(e)
                 setTx(true);
             })
@@ -205,7 +210,7 @@ export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, recei
                 from: accounts[0]
             })
             .then(e => {
-                console.log(e);
+                // console.log(e);
                 setReceipt(e)
                 setTx(true);
             })
@@ -362,7 +367,7 @@ export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, recei
                 from: accounts[0]
             })
             .then(e => {
-                console.log(e);
+                // console.log(e);
                 setReceipt(e)
                 setTx(true);
             })
@@ -454,7 +459,7 @@ export default function ContractConfig({ backdrop, setBackdrop, tx, setTx, recei
                         <tr>
                             <td>1</td>
                             <td>Ownable Contract</td>
-                            <td>{OwnableAddress && <Link onClick={() => window.open(`https://mumbai.polygonscan.com/token/${OwnableAddress}`)}>{OwnableAddress}</Link>}</td>
+                            <td>{OwnableAddress && <Link onClick={() => window.open(`https://mumbai.polygonscan.com/address/${OwnableAddress}`)}>{OwnableAddress}</Link>}</td>
                         </tr>
                     </tbody>
                     <tbody>

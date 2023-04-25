@@ -9,7 +9,7 @@ import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-const PUBLIC_KEY = "pk_test_51MPOvKSH9teV89VTVMCvOqd85C91CTFEZQCsFTMTJP1vcM2PqckaIVhFklz7ZJaGN7YWLnpc4SnjxVWDCkC4UUBt00liMm5opF"
+const PUBLIC_KEY = process.env.REACT_APP_STRIPE_PUBLIC_KEY
 
 const stripeTestPromise = loadStripe(PUBLIC_KEY)
 

@@ -47,7 +47,7 @@ export default function RazorPay({ set_Tx, setReceipt, success, setSuccess, setR
             // console.log(response, "response")
             const { data } = response;
             const options = {
-                key: 'rzp_test_mUTZOW7Dv34UnQ',
+                key: process.env.REACT_APP_RAZORPAY_KEY,
                 amount: data.order.amount,
                 currency: from,
                 name: 'EGOLD-Platform',
