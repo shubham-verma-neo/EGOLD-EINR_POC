@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts (last updated v4.7.0) (access/Ownable.sol)
 
 pragma solidity ^0.8.0;
 
@@ -12,10 +11,6 @@ import "./Context.sol";
  *
  * By default, the owner account will be the one that deploys the contract. This
  * can later be changed with {transferOwnership}.
- *
- * This module is used through inheritance. It will make available the modifier
- * `onlyOwner`, which can be applied to your functions to restrict their use to
- * the owner.
  */
 contract OwnableContract is Context {
     address private _owner;
@@ -57,6 +52,13 @@ contract OwnableContract is Context {
     }
 
     /**
+     * @dev Return `true` if the @param _address is the whitelistedAdmin else `false`.
+     */
+    function admin(address _address) external view returns(bool){
+        return _whitelistedAdmin[_address];
+    }
+
+    /**
      * @dev Add new Admin to _whitelistedAdmin mapping.
      * Can only be called by the current owner and existing admin.
      */
@@ -80,38 +82,18 @@ contract OwnableContract is Context {
         return true;
     }
 
-
     /**
-     * @dev Return `true` if the sender is the whitelistedAdmin else `revert`.
-     * 
-     * Requirements:
-     *
-     * - `_address` that you need to check whether it is a whitelistedAdmin or not.
+     * @dev Return `true` if the @param _address is the whitelistedAdmin else `revert`.
      */
     function checkAdmin(address _address) external view onlyWhitelistedAdmin(_address) returns(bool){
         return true;
     }
 
     /**
-     * @dev Return `true` if the sender is the owner else `revert`.
-     * 
-     * Requirements:
-     *
-     * - `_address` that you need to check whether it is a owner or not.
-     */
+     * @dev Return `true` if the @param _address is the owner else `revert`.
+      */
     function checkOwner(address _address) external view onlyOwner(_address) returns(bool){
         return true;
-    }
-
-    /**
-     * @dev Leaves the contract without owner. It will not be possible to call
-     * `onlyOwner` functions. Can only be called by the current owner.
-     *
-     * NOTE: Renouncing ownership will leave the contract without an owner,
-     * thereby disabling any functionality that is only available to the owner.
-     */
-    function renounceOwnership() public virtual onlyOwner(msg.sender) {
-        _transferOwnership(address(0));
     }
 
     /**
